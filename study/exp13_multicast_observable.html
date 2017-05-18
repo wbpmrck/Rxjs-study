@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>demo13:multicast observable 多播的observable</title>
+
+    <style>
+
+    </style>
+
+    <script src="Rx.min.js"></script>
+</head>
+<body>
+
+<span>
+    multicast observable其本质就是内部使用了一个subject,来让下面的多个observer同时接收到observable的execution结果 <br>
+    multicast 操作符(operator)的代码见f12. <br>
+    multicast 操作符返回一个ConnectableObservable对象，除了具有Observable的方法，还有一个connect方法。调用这个方法，相当于调用 source.subscribe(subject) <br>
+    connect方法返回一个Subscription,你可以在这上面调用unsubscribe
+</span>
+
+<script>
+    var source = Rx.Observable.from([1, 2, 3]);
+    var subject = new Rx.Subject();
+    var multicasted = source.multicast(subject);
+
+    // These are, under the hood, `subject.subscribe({...})`:
+    multicasted.subscribe({
+        next: (v) => console.log('observerA: ' + v)
+    });
+    multicasted.subscribe({
+        next: (v) => console.log('observerB: ' + v)
+    });
+
+    console.log("prepare to connect")
+    // This is, under the hood, `source.subscribe(subject)`:
+    multicasted.connect();
+
+</script>
+
+
+</body>
+</html>

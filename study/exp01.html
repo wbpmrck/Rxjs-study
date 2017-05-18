@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>demo1</title>
+
+    <style>
+        button{
+            width: 300px;
+            height: 120px;
+            background-color: coral;
+        }
+    </style>
+
+    <script src="Rx.min.js"></script>
+</head>
+<body>
+<button>Click Me</button>
+
+<script>
+//    点击按钮，可以看到console输出Clicked!
+    var button = document.querySelector('button');
+    Rx.Observable.fromEvent(button, 'click')
+        .subscribe(function(){console.log('Clicked!')});
+</script>
+
+
+</body>
+</html>

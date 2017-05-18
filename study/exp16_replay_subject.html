@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>demo16:Replay Subject</title>
+
+    <style>
+
+    </style>
+
+    <script src="Rx.min.js"></script>
+</head>
+<body>
+
+<span>
+    * Replay Subject： <br>
+    * 特点：<br>
+        * 可以指定存储最近的几个发送给observer的值,或者最近一段时间内(windowTime)的值<br>
+        * 当新的observer订阅的时候，会立刻收到这个最近的一个值<br>
+</span>
+
+<script>
+    var subject = new Rx.ReplaySubject(100, 500 /* windowTime */);
+
+    subject.subscribe({
+        next: (v) => console.log('observerA: ' + v)
+    });
+
+    var i = 1;
+    setInterval(() => subject.next(i++), 200);
+
+    setTimeout(() => {
+        subject.subscribe({
+            next: (v) => console.log('observerB: ' + v)
+        });
+    }, 900);
+
+    /*
+     Will output:
+
+     observerA: 1
+     observerA: 2
+     observerA: 3
+     observerA: 4
+     observerB: 2
+     observerB: 3
+     observerB: 4
+     observerA: 5
+     observerB: 5
+     observerA: 6
+     observerB: 6
+     ...
+     */
+</script>
+
+
+</body>
+</html>

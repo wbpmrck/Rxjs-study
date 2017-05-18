@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>demo9:subscriber.unsubscribe 可以终止observable的执行</title>
+
+    <style>
+        button{
+            width: 300px;
+            height: 120px;
+            background-color: coral;
+        }
+    </style>
+
+    <script src="Rx.min.js"></script>
+</head>
+<body>
+
+<span>
+    subscriber.unsubscribe 可以终止observable的执行 <br>
+    但是会发现，即使observable的工厂方法返回的不是函数，unsbscribe也不会报错
+</span>
+
+<script>
+    var observable = Rx.Observable.create(function subscribe(observer) {
+        // Keep track of the interval resource
+        var intervalID = setInterval(() => {
+            observer.next('hi');
+        }, 1000);
+
+        // Provide a way of canceling and disposing the interval resource
+        return function () {
+            console.log('observable begin to dispose');
+            clearInterval(intervalID);
+        };
+//        return{};  //测试返回对象的话，subscriber.unsubscribe(); 会不会报错
+    });
+    console.log('start subscriber');
+    var subscriber = observable.subscribe(
+        function (v) {
+            console.log("got:", v)
+        }
+    );
+
+    setTimeout(function () {
+        console.log('unsubscribe begin');
+        subscriber.unsubscribe();
+    },3000)
+</script>
+
+
+</body>
+</html>

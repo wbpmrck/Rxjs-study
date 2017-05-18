@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>demo6:observable 的complete和error都可以终止Observable的执行。2个任何一个执行了，observable就结束了</title>
+
+    <style>
+        button{
+            width: 300px;
+            height: 120px;
+            background-color: coral;
+        }
+    </style>
+
+    <script src="Rx.min.js"></script>
+</head>
+<body>
+
+<span>
+    observable 的complete和error都可以终止Observable的执行。2个任何一个执行了，observable就结束了
+</span>
+
+<script>
+    var observable = Rx.Observable.create(function subscribe(observer) {
+        try {
+            observer.next(1);
+            observer.next(2);
+            observer.next(3);
+//            throw new Error("haha")  //取消这行注释，就进入error流程而不会触发complete
+            observer.complete();
+
+
+            observer.next(4);
+        } catch (err) {
+            observer.error(err); // delivers an error if it caught one
+        }
+    });
+
+    console.log('start subscriber');
+    observable.subscribe(
+        function (v) {
+            console.log(".onNext:", v)
+        },
+        function (err) {
+            console.log(".onError:", err.message)
+        },
+        function () {
+            console.log(".onCompleted!")
+        }
+    );
+</script>
+
+
+</body>
+</html>

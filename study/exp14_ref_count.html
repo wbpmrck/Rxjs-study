@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>demo14:ConnectableObservable.refCount</title>
+
+    <style>
+
+    </style>
+
+    <script src="Rx.min.js"></script>
+</head>
+<body>
+
+<span>
+    ConnectableObservable.refCount返回一个Observable,在上面订阅事件处理，他会自动记录订阅者的数量 <br>
+    然后在订阅者从0到1的时候，开始connect,在从1到0的时候，unsubscribe. <br>
+    这样的话，比手动调用方便很多
+</span>
+
+<script>
+
+
+    var source = Rx.Observable.interval(500);
+    var subject = new Rx.Subject();
+    var refCounted = source.multicast(subject).refCount();
+    var subscription1, subscription2, subscriptionConnect;
+
+    // This calls `connect()`, because
+    // it is the first subscriber to `refCounted`
+    console.log('observerA subscribed');
+    subscription1 = refCounted.subscribe({
+        next: (v) => console.log('observerA: ' + v)
+    });
+
+    setTimeout(() => {
+        console.log('observerB subscribed');
+        subscription2 = refCounted.subscribe({
+            next: (v) => console.log('observerB: ' + v)
+        });
+    }, 600);
+
+    setTimeout(() => {
+        console.log('observerA unsubscribed');
+        subscription1.unsubscribe();
+    }, 1200);
+
+    // This is when the shared Observable execution will stop, because
+    // `refCounted` would have no more subscribers after this
+    setTimeout(() => {
+        console.log('observerB unsubscribed');
+        subscription2.unsubscribe();
+    }, 2000);
+
+</script>
+
+
+</body>
+</html>

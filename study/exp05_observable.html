@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>demo5:observable</title>
+
+    <style>
+        button{
+            width: 300px;
+            height: 120px;
+            background-color: coral;
+        }
+    </style>
+
+    <script src="Rx.min.js"></script>
+</head>
+<body>
+<button>Click Me</button>
+
+<script>
+    var observable = Rx.Observable.create(function (observer) {
+        var ret = observer.next(1);
+        console.log('observer.next(1); ret='+ret);
+        ret = observer.next(2);
+        console.log('observer.next(2); ret='+ret);
+        ret = observer.next(3);
+        console.log('observer.next(3); ret='+ret);
+        setTimeout(() => {
+            ret = observer.next(4);
+            console.log('observer.next(4); ret='+ret)
+            observer.complete();
+        }, 1000);
+    });
+
+    console.log('just before subscribe');
+    observable.subscribe({
+        next: x => {
+            console.log('got value ' + x);
+            return x*2; //测试返回数据
+        },
+        error: err => console.error('something wrong occurred: ' + err),
+        complete: () => console.log('done'),
+    });
+    console.log('just after subscribe');
+
+</script>
+
+
+</body>
+</html>

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>demo4:values</title>
+
+    <style>
+        button{
+            width: 300px;
+            height: 120px;
+            background-color: coral;
+        }
+    </style>
+
+    <script src="Rx.min.js"></script>
+</head>
+<body>
+<button>Click Me</button>
+
+<script>
+//传统用法：
+//var count = 0;
+//var rate = 1000;
+//var lastClick = Date.now() - rate;
+//var button = document.querySelector('button');
+//button.addEventListener('click', (event) => {
+//    if (Date.now() - lastClick >= rate) {
+//        count += event.clientX;
+//        console.log(count)
+//        lastClick = Date.now();
+//    }
+//});
+
+
+var button = document.querySelector('button');
+Rx.Observable.fromEvent(button, 'click')
+    .throttleTime(1000)
+    .map(event => event.clientX)
+    .scan((count, clientX) =>{
+        console.log(`count:${count}`);
+        console.log(`clientX:${clientX}`);
+        return count+ clientX;
+    } , 0)
+    .subscribe(count => console.log(count));
+</script>
+
+
+</body>
+</html>

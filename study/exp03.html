@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>demo3:throttle</title>
+
+    <style>
+        button{
+            width: 300px;
+            height: 120px;
+            background-color: coral;
+        }
+    </style>
+
+    <script src="Rx.min.js"></script>
+</head>
+<body>
+<button>Click Me</button>
+
+<script>
+//传统用法：
+//var count = 0;
+//var rate = 1000;
+//var lastClick = Date.now() - rate;
+//var button = document.querySelector('button');
+//button.addEventListener('click', () => {
+//    if (Date.now() - lastClick >= rate) {
+//        console.log(`Clicked ${++count} times`);
+//        lastClick = Date.now();
+//    }
+//});
+
+//用throttle之后，相同的事件1s内只会触发一次
+var button = document.querySelector('button');
+Rx.Observable.fromEvent(button, 'click')
+    .throttleTime(1000)
+    .scan(count => count + 1, 0)
+    .subscribe(count => console.log(`Clicked ${count} times`));
+</script>
+
+
+</body>
+</html>

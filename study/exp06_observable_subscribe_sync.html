@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>demo6:observable订阅调用是同步的</title>
+
+    <style>
+        button{
+            width: 300px;
+            height: 120px;
+            background-color: coral;
+        }
+    </style>
+
+    <script src="Rx.min.js"></script>
+</head>
+<body>
+
+<span>
+    observable订阅调用是同步的,通过查看日志可以看出，subscribe里的function是立即执行的
+</span>
+
+<script>
+    var foo=Rx.Observable.create(function(observer){
+        console.log('Hello');
+        observer.next(42);
+    });
+
+    console.log('before');
+    foo.subscribe(function(x){
+        console.log(x);
+    });
+    console.log('after');
+</script>
+
+
+</body>
+</html>

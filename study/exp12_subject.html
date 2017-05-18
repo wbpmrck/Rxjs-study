@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>demo12:subject:广播</title>
+
+    <style>
+        button{
+            width: 300px;
+            height: 120px;
+            background-color: coral;
+        }
+    </style>
+
+    <script src="Rx.min.js"></script>
+</head>
+<body>
+
+<span>
+    subject:表示一个话题，这个话题会向下面的"订阅者"广播消息 <br>
+    subject 本身是一个Observable,所以可以对他进行subscribe
+    subject 本身是也一个Observer,所以他具有next,complete,error等属性.这些属性你可以直接调用他来给下游进行广播，也可以把它作为另外一个
+    Observable的Observer,来代理事件(把单播转化为多播)
+</span>
+
+<script>
+    var subject = new Rx.Subject();
+
+    subject.subscribe({
+        next: (v) => console.log('observerA: ' + v)
+    });
+    subject.subscribe({
+        next: (v) => console.log('observerB: ' + v)
+    });
+    console.log('准备调用:subject.next进行数据输入');
+    //可以通过调用next直接给下面的观察者传值
+    subject.next(1);
+    subject.next(2);
+
+
+    var observable = Rx.Observable.from(['a', 'b', 'c']);
+    console.log('准备把subject添加到observable下面');
+    observable.subscribe(subject); // You can subscribe providing a Subject
+
+</script>
+
+
+</body>
+</html>

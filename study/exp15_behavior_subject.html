@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>demo15:Behavior Subject</title>
+
+    <style>
+
+    </style>
+
+    <script src="Rx.min.js"></script>
+</head>
+<body>
+
+<span>
+    * BehaviorSubject： <br>
+    * 特点：<br>
+        * 总会内部存储最后的一个发送给observer的值<br>
+        * 当新的observer订阅的时候，会立刻收到这个最近的一个值<br>
+    * 适合场景：<br>
+        * 需要展示某个不断变化的数据的时候<br>
+</span>
+
+<script>
+
+
+    var subject = new Rx.BehaviorSubject(0); // 0 is the initial value
+
+    subject.subscribe({
+        next: (v) => console.log('observerA: ' + v)
+    });
+
+    subject.next(1);
+    subject.next(2);
+
+    subject.subscribe({
+        next: (v) => console.log('observerB: ' + v)
+    });
+
+    subject.next(3);
+
+</script>
+
+
+</body>
+</html>

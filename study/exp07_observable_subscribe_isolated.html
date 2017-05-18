@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>demo6:observable订阅调用是相互独立的</title>
+
+    <style>
+        button{
+            width: 300px;
+            height: 120px;
+            background-color: coral;
+        }
+    </style>
+
+    <script src="Rx.min.js"></script>
+</head>
+<body>
+
+<span>
+    observable订阅调用是互相独立的,通过查看日志可以看出，2次subscribe执行，得到的值是独立的
+</span>
+
+<script>
+    var foo=Rx.Observable.create(function(observer){
+        var seed =1;
+        setInterval(function () {
+            observer.next(seed++);
+        },3000)
+
+    });
+
+    console.log('start subscriber 1');
+    foo.subscribe(function(v){
+        console.log("subscriber 1 got:"+v);
+    });
+    setTimeout(function () {
+
+        console.log('start subscriber 2');
+        foo.subscribe(function(v){
+            console.log("subscriber 2 got:"+v);
+        });
+    },6000)
+</script>
+
+
+</body>
+</html>

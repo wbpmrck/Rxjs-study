@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>demo2</title>
+
+    <style>
+        button{
+            width: 300px;
+            height: 120px;
+            background-color: coral;
+        }
+    </style>
+
+    <script src="Rx.min.js"></script>
+</head>
+<body>
+<button>Click Me</button>
+
+<script>
+//传统用法：
+//var count = 0;
+//var button = document.querySelector('button');
+//button.addEventListener('click', () => console.log(`Clicked ${++count} times`));
+
+var button = document.querySelector('button');
+Rx.Observable.fromEvent(button, 'click')
+    .scan(function(count){ //scan 类似于 reduce,对多个事件进行轮流处理，并且函数的返回值会作为下一次函数的输入
+        return count + 1
+    }, 0) //0 是第一次传入的count初始值
+    .subscribe(function(count){
+        console.log('Clicked '+count+'times')
+    });
+;
+</script>
+
+
+</body>
+</html>

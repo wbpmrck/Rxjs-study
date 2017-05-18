@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>demo11:subscription:订阅关系</title>
+
+    <style>
+        button{
+            width: 300px;
+            height: 120px;
+            background-color: coral;
+        }
+    </style>
+
+    <script src="Rx.min.js"></script>
+</head>
+<body>
+
+<span>
+    subscription:表示一次订阅关系
+</span>
+
+<script>
+    var observable = Rx.Observable.create(function subscribe(observer) {
+        var i=1;
+        // Keep track of the interval resource
+        var intervalID = setInterval(() => {
+            observer.next(i++);
+        }, 1000);
+        return function unsubscribe() {
+            console.log("observable ready to dispose");
+            clearInterval(intervalID);
+        }
+    });
+
+    console.log('start subscription 1');
+    var subscription1 = observable.subscribe(
+        function (v) {
+            console.log("subscription1 got:", v)
+        }
+    );
+    console.log('start subscription 2');
+    var subscription2 = observable.subscribe(
+        function (v) {
+            console.log("subscription2 got:", v)
+        }
+    );
+
+    console.log("add subscription2 to subscription1");
+    subscription1.add(subscription2);
+    setTimeout(function () {
+        console.log("subscription1 ready to unsubscribe");
+        subscription1.unsubscribe();
+    },4000)
+
+</script>
+
+
+</body>
+</html>
