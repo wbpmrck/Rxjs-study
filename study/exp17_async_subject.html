@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>demo17:Async Subject</title>
+
+    <style>
+
+    </style>
+
+    <script src="Rx.min.js"></script>
+</head>
+<body>
+
+<span>
+    * Async Subject： <br>
+    * 特点：<br>
+        * 只有最后一个值会被发送给Observer <br>
+        * 只有complete的时候，值才会被发送
+</span>
+
+<script>
+    var subject = new Rx.AsyncSubject();
+
+    subject.subscribe({
+        next: (v) => console.log('observerA: ' + v)
+    });
+
+    subject.next(1);
+    subject.next(2);
+    subject.next(3);
+    subject.next(4);
+
+    subject.subscribe({
+        next: (v) => console.log('observerB: ' + v)
+    });
+
+    subject.next(5);
+    subject.complete();
+
+    /*
+        will output:
+     observerA: 5
+     observerB: 5
+     */
+
+
+</script>
+
+
+</body>
+</html>

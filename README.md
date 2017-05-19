@@ -21,3 +21,6 @@ study cases of Rxjs library
     - [exp14_ref_count](./study/exp14_ref_count.html)
     - [exp15_behavior_subject](./study/exp15_behavior_subject.html)
     - [exp16_replay_subject](./study/exp16_replay_subject.html)
+    - [exp17_async_subject](./study/exp17_async_subject.html)
+    - [exp18_instance_operator](./study/exp18_instance_operator.html)
+    - [exp19_static_operator](./study/exp19_static_operator.html)

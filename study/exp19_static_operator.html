@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>demo19:static_operator</title>
+
+    <style>
+
+    </style>
+
+    <script src="Rx.min.js"></script>
+</head>
+<body>
+
+<span>
+    * static operator： <br>
+    * 特点：<br>
+        * 注册在Observable类上的方法 <br>
+        * 仅仅依赖传入参数来决定返回什么样的Observable
+
+
+</span>
+
+<script>
+
+    Rx.Observable.prototype.multiplyByTen = function multiplyByTen() {
+        var input = this;
+        return Rx.Observable.create(function subscribe(observer) {
+            input.subscribe({
+                next: (v) => observer.next(10 * v),
+                error: (err) => observer.error(err),
+                complete: () => observer.complete()
+            });
+        });
+    };
+
+    /*
+        下面2个是通过静态操作符(static operator)生成的
+     */
+    console.log("调用 static operator:interval,arg=1000");
+    var observable1 = Rx.Observable.interval(1000); //每隔1s输出一个数字
+    console.log("调用 static operator:interval,arg=400,chain with multiplyByTen");
+    var observable2 = Rx.Observable.interval(400).multiplyByTen(); //每隔400ms输出1数字，然后再乘以10
+
+    var merged = Rx.Observable.merge(observable1, observable2);
+
+
+
+    merged.subscribe(x => console.log(x));
+    /*
+        will output:
+     0
+     10
+     0
+     20
+     30
+     1
+     40
+     50
+     60
+     2
+     ...
+     */
+
+
+</script>
+
+
+</body>
+</html>

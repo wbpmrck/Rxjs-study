@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>demo18:instance_operator</title>
+
+    <style>
+
+    </style>
+
+    <script src="Rx.min.js"></script>
+</head>
+<body>
+
+<span>
+    * instance operator： <br>
+    * 特点：<br>
+        * 可以直接通过Observable实例.xxx进行调用的操作符 <br>
+        * 内部使用this作为订阅源<br>
+        * 创建一个新的Observable返回
+
+</span>
+
+<script>
+
+    Rx.Observable.prototype.multiplyByTen = function multiplyByTen() {
+        var input = this;
+        return Rx.Observable.create(function subscribe(observer) {
+            input.subscribe({
+                next: (v) => observer.next(10 * v),
+                error: (err) => observer.error(err),
+                complete: () => observer.complete()
+            });
+        });
+    };
+
+    console.log("调用 instance operator:multiplyByTen");
+    var observable = Rx.Observable.from([1, 2, 3, 4]).multiplyByTen();
+
+    observable.subscribe(x => console.log(x));
+    /*
+        will output:
+     10
+     20
+     30
+     40
+     */
+
+
+</script>
+
+
+</body>
+</html>
