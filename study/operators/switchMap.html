@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>operator:switchMap</title>
+
+    <link rel="stylesheet" href="../reset.css">
+    <link rel="stylesheet" href="../share.css">
+    <script src="../Rx.min.js"></script>
+</head>
+<body>
+
+<h1 class="operator-name">switchMap</h1>
+
+<ul class="operator-params">
+    参数列表：
+    <li>
+        <span class="operator-params-name">project</span>
+        <span class="operator-params-type">function(value: T, ?index: number): ObservableInput</span>
+        <span class="operator-params-desc">这是一个函数，接收source发出的每个元素，返回一个observable</span>
+    </li>
+    <li>
+        <span class="operator-params-name">resultSelector</span>
+        <span class="operator-params-type">function(outerValue: T, innerValue: I, outerIndex: number, innerIndex: number): any</span>
+        <span class="operator-params-desc">1个函数，用来决定最终对外输出的数据。这个函数可以访问到source Observable的value以及project函数返回的observable的值。这个函数接收4个参数:
+outerValue: source发射出的值
+innerValue: projected Observable 发射出的值
+outerIndex: source值在source中的序号
+innerIndex: projected发射的值在projected Observable中的序号</span>
+    </li>
+</ul>
+
+<hr>
+<h1>珠宝图:</h1>
+<div class="marble-box">
+    <img src="switchMap.png" alt="" class="operator-marble">
+</div>
+<hr>
+<h1>功能说明:</h1>
+<ul class="desc">
+    <li>switchMap其实是switch和map的合并写法</li>
+    <li>第二个参数是用来修改switchMap的最终输出的</li>
+</ul>
+<hr>
+<h1>备注事项:</h1>
+<ul class="notice">
+    <li>1</li>
+    <li>2</li>
+</ul>
+
+<div class="demo">
+    <span>点击不同按钮查看不同demo 代码效果</span>
+    <button onclick="demo1();">demo1</button>
+    <button onclick="demo2();">demo2</button>
+</div>
+
+<script>
+    function demo1(){
+        console.log("可以看到，switchMap会在每次点击都生成一个新的observable,订阅并返回这个observable的值。同时退订之前的observable")
+
+        var clicks = Rx.Observable.fromEvent(document, 'click');
+        var result = clicks.switchMap((ev) => Rx.Observable.interval(1000));
+        result.subscribe(x => console.log(x));
+    }
+    function demo2(){
+        console.log("可以看到，switchMap的第二个参数可以修改最终输出的值，这里我们取一个source observable的值拼接 projected observable的值")
+
+        var clicks = Rx.Observable.fromEvent(document, 'click');
+        var result = clicks.switchMap((ev) => Rx.Observable.interval(1000),(outerV,innerV,outerId,innerid)=>{
+            return `clientX:${outerV.clientX}-tick:${innerV}`;
+        });
+        result.subscribe(x => console.log(x));
+
+        /*
+        输出示例:
+         clientX:490-tick:0
+         clientX:490-tick:1
+         clientX:490-tick:2
+         clientX:490-tick:3
+         */
+    }
+
+</script>
+
+
+</body>
+</html>

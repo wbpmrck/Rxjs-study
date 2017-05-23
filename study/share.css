@@ -38,3 +38,27 @@ body{
     font-size: 20px;
     text-align: center;
 }
+
+.operator-params li{
+    padding-left: 30px;
+}
+/*参数名*/
+.operator-params .operator-params-name{
+    font-size: 20px;
+}
+.operator-params .operator-params-name:after{
+    content: ':';
+}
+/*参数类型*/
+.operator-params .operator-params-type{
+    font-size: 20px;
+    color: bisque;
+}
+/*参数描述*/
+.operator-params .operator-params-desc{
+
+    display: block;
+    font-size: 20px;
+    color: #22ffff  ;
+    border: dashed 3px gray;
+}
