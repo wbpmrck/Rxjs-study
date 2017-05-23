@@ -24,3 +24,142 @@ study cases of Rxjs library
     - [exp17_async_subject](./study/exp17_async_subject.html)
     - [exp18_instance_operator](./study/exp18_instance_operator.html)
     - [exp19_static_operator](./study/exp19_static_operator.html)
+
+- operators
+    - Creation Operators
+        - ajax
+        - bindCallback
+        - bindNodeCallback
+        - create
+        - defer
+        - empty
+        - from
+        - fromEvent
+        - fromEventPattern
+        - fromPromise
+        - generate
+        - interval
+        - never
+        - of
+        - repeat
+        - repeatWhen
+        - range
+        - throw
+        - timer
+
+    - Transformation Operators
+        - buffer
+        - bufferCount
+        - bufferTime
+        - bufferToggle
+        - bufferWhen
+        - concatMap
+        - concatMapTo
+        - exhaustMap
+        - expand
+        - groupBy
+        - map
+        - mapTo
+        - mergeMap
+        - mergeMapTo
+        - mergeScan
+        - pairwise
+        - partition
+        - pluck
+        - scan
+        - switchMap
+        - switchMapTo
+        - window
+        - windowCount
+        - windowTime
+        - windowToggle
+        - windowWhen
+
+    - Filtering Operators
+        - debounce
+        - debounceTime
+        - distinct
+        - distinctKey
+        - distinctUntilChanged
+        - distinctUntilKeyChanged
+        - elementAt
+        - filter
+        - first
+        - ignoreElements
+        - audit
+        - auditTime
+        - last
+        - sample
+        - sampleTime
+        - single
+        - skip
+        - skipUntil
+        - skipWhile
+        - take
+        - takeLast
+        - takeUntil
+        - takeWhile
+        - throttle
+        - throttleTime
+
+    - Combination Operators
+        - combineAll
+        - combineLatest
+        - concat
+        - concatAll
+        - exhaust
+        - forkJoin
+        - merge
+        - mergeAll
+        - race
+        - startWith
+        - switch
+        - withLatestFrom
+        - zip
+        - zipAll
+
+    - Multicasting Operators
+        - cache
+        - multicast
+        - publish
+        - publishBehavior
+        - publishLast
+        - publishReplay
+        - share
+
+    - Error Handling Operators
+        - catch
+        - retry
+        - retryWhen
+
+    - Utility Operators
+        - do
+        - delay
+        - delayWhen
+        - dematerialize
+        - finally
+        - let
+        - materialize
+        - observeOn
+        - subscribeOn
+        - timeInterval
+        - timestamp
+        - timeout
+        - timeoutWith
+        - toArray
+        - toPromise
+
+    - Conditional and Boolean Operators
+
+        - defaultIfEmpty
+        - every
+        - find
+        - findIndex
+        - isEmpty
+
+    - Mathematical and Aggregate Operators
+
+        - count
+        - max
+        - min
+        - reduce
