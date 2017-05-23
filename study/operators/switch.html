@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>operator:switch</title>
+
+    <link rel="stylesheet" href="../reset.css">
+    <link rel="stylesheet" href="../share.css">
+    <script src="../Rx.min.js"></script>
+</head>
+<body>
+
+<h1 class="operator-name">switch</h1>
+<h1>珠宝图:</h1>
+<div class="marble-box">
+    <img src="switch.png" alt="" class="operator-marble">
+</div>
+
+<h1>功能说明:</h1>
+<ul class="desc">
+    <li>switch把一个高阶observable转化为一个1阶(普通)observable</li>
+    <li>当上游返回的数据也是一个observable的时候，switch订阅最近一次发射的observable,然后转为发射这个observable的值</li>
+</ul>
+<h1>备注事项:</h1>
+<ul class="notice">
+    <li>1</li>
+    <li>2</li>
+</ul>
+
+<div class="demo">
+    <span>点击不同按钮查看不同demo 代码效果</span>
+    <button onclick="demo1();">demo1</button>
+    <button onclick="demo2();">demo2</button>
+</div>
+
+<script>
+    function demo1(){
+        console.log("可以看到，每次点击都生成一个新的observable,通过switch会把这个observable展开")
+
+//    Rerun an interval Observable on every click event
+        var clicks = Rx.Observable.fromEvent(document, 'click');
+        // Each click event is mapped to an Observable that ticks every second
+        var higherOrder = clicks.map((ev) => Rx.Observable.interval(1000));
+        higherOrder.subscribe(x => console.log("higherOrder:"+x));
+
+        var switched = higherOrder.switch();
+        // The outcome is that `switched` is essentially a timer that restarts
+        // on every click. The interval Observables from older clicks do not merge
+        // with the current interval Observable.
+        switched.subscribe(x => console.log("switched:"+x));
+    }
+    function demo2(){
+        console.log("可以看到，switch会自定订阅最新的一个返回的Observable,所以此例子中，switch发射的数据会一直增加，直到o1又发射新的observable")
+        var o1 = Rx.Observable.interval(2000);
+        var o2 = o1.map((ev) => Rx.Observable.interval(300));
+        o2.subscribe(x => console.log("o2:"+x));
+
+        var switched = o2.switch();
+        // The outcome is that `switched` is essentially a timer that restarts
+        // on every click. The interval Observables from older clicks do not merge
+        // with the current interval Observable.
+        switched.subscribe(x => console.log("switched:"+x));
+    }
+
+</script>
+
+
+</body>
+</html>

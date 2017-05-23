@@ -1,0 +1,40 @@
+body{
+    background-color: darkcyan;
+
+    padding-bottom: 100px;
+}
+.operator-name{
+    text-align: center;
+    font-size: 30px;
+    border: dashed 1px #ff223a;
+}
+.marble-box{
+    text-align: center;
+}
+.operator-marble{
+    width: 640px;
+    height: 384px;
+    border: solid 1px #22ff44;
+}
+
+.desc{
+    padding-left: 30px;
+}
+.notice{
+    padding-left: 30px;
+    color:red;
+}
+
+.demo{
+    position: fixed;
+    right: 2px;
+    bottom: 2px;
+    height:94px;
+    border: solid 2px #1233ff;
+}
+
+.demo span{
+    display: block;
+    font-size: 20px;
+    text-align: center;
+}
