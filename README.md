@@ -113,7 +113,7 @@ study cases of Rxjs library
         - mergeAll
         - race
         - startWith
-        - [switch](./operators/switch.html)
+        - [switch](./study/operators/switch.html)
         - withLatestFrom
         - zip
         - zipAll
