@@ -30,17 +30,17 @@ study cases of Rxjs library
         - ajax
         - bindCallback
         - bindNodeCallback
-        - create
+        - create(参见之前的练习)
         - defer
         - empty
-        - from
-        - fromEvent
+        - [from](./study/operators/from.html)
+        - [fromEvent](./study/operators/fromEvent.html)
         - fromEventPattern
         - fromPromise
         - generate
         - interval
         - never
-        - of
+        - [of](./study/operators/of.html)
         - repeat
         - repeatWhen
         - range
@@ -67,7 +67,7 @@ study cases of Rxjs library
         - partition
         - pluck
         - scan
-        - switchMap
+        - [switchMap](./study/operators/switchMap.html)
         - switchMapTo
         - window
         - windowCount

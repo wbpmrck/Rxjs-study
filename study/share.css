@@ -12,8 +12,9 @@ body{
     text-align: center;
 }
 .operator-marble{
-    width: 640px;
-    height: 384px;
+    /*width: 640px;*/
+    /*height: 384px;*/
+    transform: scale(0.5) translateX(-25%) translateY(-50%);
     border: solid 1px #22ff44;
 }
 

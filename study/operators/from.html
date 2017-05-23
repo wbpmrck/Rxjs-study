@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>operator:from</title>
+
+    <link rel="stylesheet" href="../reset.css">
+    <link rel="stylesheet" href="../share.css">
+    <script src="../Rx.min.js"></script>
+</head>
+<body>
+
+<h1 class="operator-name">from</h1>
+
+<ul class="operator-params">
+    参数列表：
+    <li>
+        <span class="operator-params-name">ish</span>
+        <span class="operator-params-type">ObservableInput&lt;T&gt;</span>
+        <span class="operator-params-desc">若干个参数，表示需要发送的数值序列</span>
+    </li>
+    <li>
+        <span class="operator-params-name">scheduler</span>
+        <span class="operator-params-type">Scheduler</span>
+        <span class="operator-params-desc">可选参数，用于控制数据emit的scheduler</span>
+    </li>
+</ul>
+返回值:<h2 class="operator-ret"> Observable&lt;T&gt; </h2>
+
+<hr>
+<h1>珠宝图:</h1>
+<div class="marble-box">
+    <img src="from.png" alt="" class="operator-marble">
+</div>
+<hr>
+<h1>功能说明:</h1>
+<ul class="desc">
+    <li>from把可迭代的参数转化为next的参数，不断的向外部输出</li>
+</ul>
+<hr>
+<h1>备注事项:</h1>
+<ul class="notice">
+    <li>from可以对generator进行操作</li>
+    <li>from也可以传入Promise,效果等同于fromPromise</li>
+</ul>
+
+<div class="demo">
+    <span>点击不同按钮查看不同demo 代码效果</span>
+    <button onclick="demo1();">demo1</button>
+    <button onclick="demo2();">demo2</button>
+    <button onclick="demo3();">demo3</button>
+    <button onclick="demo4();">demo4</button>
+</div>
+
+<script>
+    function demo1(){
+        console.log("from + 数组:")
+
+        var o1 = Rx.Observable.from([1,2,3,4,5]);
+        o1.subscribe(x => console.log(x));
+    }
+    function demo2(){
+        console.log("from + generator:")
+        function* generateDoubles(seed) {
+            var i = seed;
+            while (true) {
+                yield i;
+                i = 2 * i; // double it
+            }
+        }
+
+        var iterator = generateDoubles(3);
+        var result = Rx.Observable.from(iterator).take(10);
+        result.subscribe(x => console.log(x));
+    }
+    function demo3(){
+        console.log("from + 字符串:")
+
+        var o1 = Rx.Observable.from("我爱Rx.js");
+        o1.subscribe(x => console.log(x));
+    }
+    function demo4() {
+        var source = Rx.Observable
+            .from(new Promise((resolve, reject) => {
+                setTimeout(() => {
+                    resolve('Hello RxJS!');
+                },1000)
+            }))
+        source.subscribe(x => console.log(x));
+
+    }
+
+</script>
+
+
+</body>
+</html>
