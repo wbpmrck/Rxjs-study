@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>operator:filter</title>
+
+    <link rel="stylesheet" href="../reset.css">
+    <link rel="stylesheet" href="../share.css">
+    <script src="../Rx.min.js"></script>
+</head>
+<body>
+
+<h1 class="operator-name">filter</h1>
+
+<ul class="operator-params">
+    参数列表：
+    <li>
+        <span class="operator-params-name">predicate</span>
+        <span class="operator-params-type">function(value: T, index: number): boolean</span>
+        <span class="operator-params-desc">筛选函数，接收2个参数，第一个是原来的值，第二个是值的下标。返回true值表示需要，返回false表示丢弃</span>
+    </li>
+    <li>
+        <span class="operator-params-name">thisArg</span>
+        <span class="operator-params-type">any</span>
+        <span class="operator-params-desc">(可选)设置project函数里的this</span>
+    </li>
+
+</ul>
+返回值:<h2 class="operator-ret"> Observable</h2>
+
+<hr>
+<h1>珠宝图:</h1>
+<div class="marble-box">
+    <img src="filter.png" alt="" class="operator-marble">
+</div>
+<hr>
+<h1>功能说明:</h1>
+<ul class="desc">
+    <li>filter 对输入进行筛选，选择需要的输出</li>
+</ul>
+<hr>
+<h1>备注事项:</h1>
+<ul class="notice">
+    <li></li>
+</ul>
+
+<div class="demo">
+    <span>点击不同按钮查看不同demo 代码效果</span>
+    <button onclick="demo1();">demo1</button>
+</div>
+
+<script>
+    function demo1(){
+        console.log("filter :鼠标点击文档,只有点击图片时候才会有输出");
+        var clicks = Rx.Observable.fromEvent(document, 'click');
+        var clicksOnDivs = clicks.filter(ev => ev.target.tagName.toLowerCase() === 'img');
+        clicksOnDivs.subscribe(x => console.log(x));
+    }
+
+</script>
+
+
+</body>
+</html>

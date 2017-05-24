@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>operator:first</title>
+
+    <link rel="stylesheet" href="../reset.css">
+    <link rel="stylesheet" href="../share.css">
+    <script src="../Rx.min.js"></script>
+</head>
+<body>
+
+<h1 class="operator-name">first</h1>
+
+<ul class="operator-params">
+    参数列表：
+    <li>
+        <span class="operator-params-name">predicate</span>
+        <span class="operator-params-type">function(value: T, index: number, source: Observable<T>): boolean</span>
+        <span class="operator-params-desc">检测函数，对输出的第一个值进行检查，返回true表示满足条件，返回false则不会输出</span>
+    </li>
+    <li>
+        <span class="operator-params-name">resultSelector</span>
+        <span class="operator-params-type">function(value: T, index: number): R</span>
+        <span class="operator-params-desc">对输出的数据进行转换，返回R类型的新的数据</span>
+    </li>
+    <li>
+        <span class="operator-params-name">defaultValue</span>
+        <span class="operator-params-type">R</span>
+        <span class="operator-params-desc">如果source在complete之前没有输出任何值，则返回这个默认值</span>
+    </li>
+
+
+</ul>
+返回值:<h2 class="operator-ret"> Observable &lt;T|R&gt;</h2>
+
+<hr>
+<h1>珠宝图:</h1>
+<div class="marble-box">
+    <img src="first.png" alt="" class="operator-marble">
+</div>
+<hr>
+<h1>功能说明:</h1>
+<ul class="desc">
+    <li>first 只输出满足条件的第一个数值。如果source都complete还没有满足的值，则直接返回defaultValue</li>
+</ul>
+<hr>
+<h1>备注事项:</h1>
+<ul class="notice">
+    <!--<li></li>-->
+</ul>
+
+<div class="demo">
+    <span>点击不同按钮查看不同demo 代码效果</span>
+    <button onclick="demo1();">demo1</button>
+    <button onclick="demo2();">demo2</button>
+    <button onclick="demo3();">demo3</button>
+</div>
+
+<script>
+    function demo1(){
+        console.log("first :直接取第一个，结束");
+
+        var source = Rx.Observable.interval(1000);
+        var example = source.first();
+
+        example.subscribe({
+            next: (value) => { console.log(value); },
+            error: (err) => { console.log('Error: ' + err); },
+            complete: () => { console.log('complete'); }
+        });
+// 0
+// complete
+    }
+    function demo2(){
+        console.log("first :获取用户第一次点击image的位置，然后结束");
+
+        var clicks = Rx.Observable.fromEvent(document, 'click');
+        var result = clicks.first(ev => ev.target.tagName === 'IMG',val=>[val.clientX,val.clientY]);
+
+        result.subscribe({
+            next: (value) => { console.log(value); },
+            error: (err) => { console.log('Error: ' + err); },
+            complete: () => { console.log('complete'); }
+        });
+    }
+
+    function demo3(){
+        console.log("first :获取不到source中符合条件的数据，返回default value='not found',结束");
+
+        var source = Rx.Observable.from([1,2,3,4,5]);
+        var example = source.first(v=>v>10,null,"not found");
+
+        example.subscribe({
+            next: (value) => { console.log(value); },
+            error: (err) => { console.log('Error: ' + err); },
+            complete: () => { console.log('complete'); }
+        });
+// 0
+// complete
+    }
+</script>
+
+
+</body>
+</html>

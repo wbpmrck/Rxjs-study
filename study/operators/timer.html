@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>operator:timer</title>
+
+    <link rel="stylesheet" href="../reset.css">
+    <link rel="stylesheet" href="../share.css">
+    <script src="../Rx.min.js"></script>
+</head>
+<body>
+
+<h1 class="operator-name">timer</h1>
+
+<ul class="operator-params">
+    参数列表：
+    <li>
+        <span class="operator-params-name">initialDelay</span>
+        <span class="operator-params-type">number|Date</span>
+        <span class="operator-params-desc">发送第一个值之前的等待时间，可以是ms，或者是指定时间</span>
+    </li>
+    <li>
+        <span class="operator-params-name">period</span>
+        <span class="operator-params-type">number</span>
+        <span class="operator-params-desc">（可选）第一个值以后，每2个值之间的间隔时间，单位ms.如果该参数不传，则第一个参数发出后，会发送complete</span>
+    </li>
+    <li>
+        <span class="operator-params-name">scheduler</span>
+        <span class="operator-params-type">Scheduler</span>
+        <span class="operator-params-desc">(可选)调度器。调度器可以有自己的时间定义</span>
+    </li>
+
+</ul>
+返回值:<h2 class="operator-ret"> Observable</h2>
+
+<hr>
+<h1>珠宝图:</h1>
+<div class="marble-box">
+    <img src="timer.png" alt="" class="operator-marble">
+</div>
+<hr>
+<h1>功能说明:</h1>
+<ul class="desc">
+    <li>timer 内部会先等一段时间(initialDelay)，发送第一个值，然后以后每次等待period，继续发送值</li>
+</ul>
+<hr>
+<h1>备注事项:</h1>
+<ul class="notice">
+    <li></li>
+</ul>
+
+<div class="demo">
+    <span>点击不同按钮查看不同demo 代码效果</span>
+    <button onclick="demo1();">demo1</button>
+    <button onclick="demo2();">demo2</button>
+    <button onclick="demo3();">demo3</button>
+</div>
+
+<script>
+    function demo1(){
+        console.log("timer :3s看到第一个数据，以后每隔1s来新数据");
+        var numbers = Rx.Observable.timer(3000, 1000);
+        numbers.subscribe(x => console.log(x));
+    }
+    function demo2(){
+        console.log("timer :3s看到第一个数据，然后收到 complete");
+        var numbers = Rx.Observable.timer(3000);
+        numbers.subscribe(x => console.log(x),x => console.log("err"),x => console.log("complete"));
+    }
+
+    function demo3(){
+        console.log("timer :使用日期来指定发射时间,2s之后看到数据，然后complete");
+        var numbers = Rx.Observable.timer(new Date(+new Date() +2000));
+        numbers.subscribe(x => console.log(x),x => console.log("err"),x => console.log("complete"));
+    }
+
+
+</script>
+
+
+</body>
+</html>

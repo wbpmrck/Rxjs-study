@@ -38,14 +38,14 @@ study cases of Rxjs library
         - [fromEventPattern](./study/operators/fromEventPattern.html)
         - [fromPromise](./study/operators/fromPromise.html)
         - generate
-        - interval
+        - [interval](./study/operators/interval.html)
         - [never](./study/operators/never.html)
         - [of](./study/operators/of.html)
         - repeat
         - repeatWhen
         - range
         - [throw](./study/operators/throw.html)
-        - timer
+        - [timer](./study/operators/timer.html)
 
     - Transformation Operators
         - buffer
@@ -58,8 +58,8 @@ study cases of Rxjs library
         - exhaustMap
         - expand
         - groupBy
-        - map
-        - mapTo
+        - [map](./study/operators/map.html)
+        - [mapTo](./study/operators/mapTo.html)
         - mergeMap
         - mergeMapTo
         - mergeScan
@@ -83,8 +83,8 @@ study cases of Rxjs library
         - distinctUntilChanged
         - distinctUntilKeyChanged
         - elementAt
-        - filter
-        - first
+        - [filter](./study/operators/filter.html)
+        - [first](./study/operators/first.html)
         - ignoreElements
         - audit
         - auditTime
@@ -95,7 +95,7 @@ study cases of Rxjs library
         - skip
         - skipUntil
         - skipWhile
-        - take
+        - [take](./study/operators/take.html)
         - takeLast
         - takeUntil
         - takeWhile

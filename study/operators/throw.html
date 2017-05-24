@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>operator:throw</title>
+
+    <link rel="stylesheet" href="../reset.css">
+    <link rel="stylesheet" href="../share.css">
+    <script src="../Rx.min.js"></script>
+</head>
+<body>
+
+<h1 class="operator-name">throw</h1>
+
+<ul class="operator-params">
+    参数列表：
+    <li>
+        <span class="operator-params-name">error</span>
+        <span class="operator-params-type">any</span>
+        <span class="operator-params-desc">抛出的错误</span>
+    </li>
+    <li>
+        <span class="operator-params-name">scheduler</span>
+        <span class="operator-params-type">Scheduler</span>
+        <span class="operator-params-desc">(可选)调度器</span>
+    </li>
+
+</ul>
+返回值:<h2 class="operator-ret"> Observable&lt;T&gt; </h2>
+
+<hr>
+<h1>珠宝图:</h1>
+<div class="marble-box">
+    <img src="throw.png" alt="" class="operator-marble">
+</div>
+<hr>
+<h1>功能说明:</h1>
+<ul class="desc">
+    <li>throw 会立刻 error,不做其他任何事情</li>
+</ul>
+<hr>
+<h1>备注事项:</h1>
+<ul class="notice">
+    <li>throw也主要是配合其他operator来使用的，比如mergeMap</li>
+</ul>
+
+<div class="demo">
+    <span>点击不同按钮查看不同demo 代码效果</span>
+    <button onclick="demo1();">demo1</button>
+</div>
+
+<script>
+    function demo1(){
+        console.log("throw :只会看到一个error的捕获");
+
+        var source = Rx.Observable.throw('Oop!');
+
+        source.subscribe({
+            next: function(value) {
+                console.log(value)
+            },
+            complete: function() {
+                console.log('complete!');
+            },
+            error: function(error) {
+                console.log('Throw Error: ' + error)
+            }
+        });
+// Throw Error: Oop!
+    }
+
+
+</script>
+
+
+</body>
+</html>

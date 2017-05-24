@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>operator:take</title>
+
+    <link rel="stylesheet" href="../reset.css">
+    <link rel="stylesheet" href="../share.css">
+    <script src="../Rx.min.js"></script>
+</head>
+<body>
+
+<h1 class="operator-name">take</h1>
+
+<ul class="operator-params">
+    参数列表：
+    <li>
+        <span class="operator-params-name">count</span>
+        <span class="operator-params-type">number</span>
+        <span class="operator-params-desc">最多返回count个value</span>
+    </li>
+
+
+</ul>
+返回值:<h2 class="operator-ret"> Observable</h2>
+
+<hr>
+<h1>珠宝图:</h1>
+<div class="marble-box">
+    <img src="take.png" alt="" class="operator-marble">
+</div>
+<hr>
+<h1>功能说明:</h1>
+<ul class="desc">
+    <li>take 只输出source的头几个数字，然后直接输出complete,不管source是否结束。</li>
+</ul>
+<hr>
+<h1>备注事项:</h1>
+<ul class="notice">
+    <li>如果source输出的数字个数少于take的参数，就complete了，take也同样complete</li>
+</ul>
+
+<div class="demo">
+    <span>点击不同按钮查看不同demo 代码效果</span>
+    <button onclick="demo1();">demo1</button>
+    <button onclick="demo2();">demo2</button>
+</div>
+
+<script>
+    function demo1(){
+        console.log("take :选取前3个值，然后结束");
+
+        var source = Rx.Observable.interval(1000);
+        var example = source.take(3);
+
+        example.subscribe({
+            next: (value) => { console.log(value); },
+            error: (err) => { console.log('Error: ' + err); },
+            complete: () => { console.log('complete'); }
+        });
+// 0
+// 1
+// 2
+// complete
+    }
+    function demo2(){
+        console.log("take :source的值不够3个，提前结束");
+
+        var source = Rx.Observable.from([0,1]);
+        var example = source.take(3);
+
+        example.subscribe({
+            next: (value) => { console.log(value); },
+            error: (err) => { console.log('Error: ' + err); },
+            complete: () => { console.log('complete'); }
+        });
+// 0
+// 1
+// 2
+// complete
+    }
+
+</script>
+
+
+</body>
+</html>

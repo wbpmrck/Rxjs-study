@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>operator:map</title>
+
+    <link rel="stylesheet" href="../reset.css">
+    <link rel="stylesheet" href="../share.css">
+    <script src="../Rx.min.js"></script>
+</head>
+<body>
+
+<h1 class="operator-name">map</h1>
+
+<ul class="operator-params">
+    参数列表：
+    <li>
+        <span class="operator-params-name">project</span>
+        <span class="operator-params-type">function(value: T, index: number): R</span>
+        <span class="operator-params-desc">映射函数，接收2个参数，第一个是原来的值，第二个是值的下标。返回新的值</span>
+    </li>
+    <li>
+        <span class="operator-params-name">thisArg</span>
+        <span class="operator-params-type">any</span>
+        <span class="operator-params-desc">(可选)设置project函数里的this</span>
+    </li>
+
+</ul>
+返回值:<h2 class="operator-ret"> Observable&lt;R&gt;</h2>
+
+<hr>
+<h1>珠宝图:</h1>
+<div class="marble-box">
+    <img src="map.png" alt="" class="operator-marble">
+</div>
+<hr>
+<h1>功能说明:</h1>
+<ul class="desc">
+    <li>map 对输入进行映射，转化为新的输出</li>
+</ul>
+<hr>
+<h1>备注事项:</h1>
+<ul class="notice">
+    <li></li>
+</ul>
+
+<div class="demo">
+    <span>点击不同按钮查看不同demo 代码效果</span>
+    <button onclick="demo1();">demo1</button>
+    <button onclick="demo2();">demo2</button>
+</div>
+
+<script>
+    function demo1(){
+        console.log("map :鼠标点击文档查看map之后的x坐标");
+        var clicks = Rx.Observable.fromEvent(document, 'click');
+        var positions = clicks.map(ev => ev.clientX);
+        positions.subscribe(x => console.log(x));
+    }
+
+    function demo2(){
+        console.log("map :每秒输出映射之后的文本");
+        var source = Rx.Observable.interval(1000);
+        var newest = source.map(x => x+1 + "秒过去了");
+
+        newest.subscribe(console.log);
+// 2
+// 3
+// 4
+// 5..
+    }
+
+
+</script>
+
+
+</body>
+</html>
