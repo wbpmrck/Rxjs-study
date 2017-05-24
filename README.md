@@ -97,7 +97,7 @@ study cases of Rxjs library
         - skipWhile
         - [take](./study/operators/take.html)
         - takeLast
-        - takeUntil
+        - [takeUntil](./study/operators/takeUntil.html)
         - takeWhile
         - throttle
         - throttleTime
@@ -106,7 +106,7 @@ study cases of Rxjs library
         - combineAll
         - combineLatest
         - concat
-        - concatAll
+        - [concatAll](./study/operators/concatAll.html)
         - exhaust
         - forkJoin
         - merge
