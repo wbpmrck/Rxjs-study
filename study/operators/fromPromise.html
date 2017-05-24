@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>operator:fromPromise</title>
+
+    <link rel="stylesheet" href="../reset.css">
+    <link rel="stylesheet" href="../share.css">
+    <script src="../Rx.min.js"></script>
+</head>
+<body>
+
+<h1 class="operator-name">fromPromise</h1>
+
+<ul class="operator-params">
+    参数列表：
+    <li>
+        <span class="operator-params-name">promise</span>
+        <span class="operator-params-type">Promise&lt;T&gt;</span>
+        <span class="operator-params-desc">如果promise成功resolve一个value,则next这个value,然后complete.如果promise进行reject,则error这个错误</span>
+    </li>
+    <li>
+        <span class="operator-params-name">scheduler</span>
+        <span class="operator-params-type">Scheduler</span>
+        <span class="operator-params-desc">可选参数。用于调度value在某个线程上发出的调度器</span>
+    </li>
+</ul>
+返回值:<h2 class="operator-ret"> Observable&lt;T&gt; </h2>
+
+<hr>
+<!--<h1>珠宝图:</h1>-->
+<!--<div class="marble-box">-->
+    <!--<img src="fromPromise.png" alt="" class="operator-marble">-->
+<!--</div>-->
+<hr>
+<h1>功能说明:</h1>
+<ul class="desc">
+    <li>fromPromise 只能处理promise参数，其他参数可以用from</li>
+</ul>
+<hr>
+<h1>备注事项:</h1>
+<ul class="notice">
+    <li></li>
+</ul>
+
+<div class="demo">
+    <span>点击不同按钮查看不同demo 代码效果</span>
+    <button onclick="demo1();">demo1</button>
+    <button onclick="demo2();">demo2</button>
+</div>
+
+<script>
+    function demo1(){
+        console.log("fromPromise +resolve:");
+
+        var source = Rx.Observable
+            .from(new Promise((resolve, reject) => {
+                setTimeout(() => {
+                    resolve('Hello RxJS!');
+                },1000)
+            }))
+        source.subscribe(x => console.log(x));
+    }
+
+    function demo2(){
+        console.log("fromPromise +reject:");
+
+        var source = Rx.Observable
+            .from(new Promise((resolve, reject) => {
+                setTimeout(() => {
+                    reject('error!');
+                },1000)
+            }))
+        source.subscribe(x => console.log(x),x => console.log("catch error:"+x));
+    }
+
+</script>
+
+
+</body>
+</html>

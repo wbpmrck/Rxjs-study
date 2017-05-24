@@ -32,19 +32,19 @@ study cases of Rxjs library
         - bindNodeCallback
         - create(参见之前的练习)
         - defer
-        - empty
+        - [empty](./study/operators/empty.html)
         - [from](./study/operators/from.html)
         - [fromEvent](./study/operators/fromEvent.html)
-        - fromEventPattern
-        - fromPromise
+        - [fromEventPattern](./study/operators/fromEventPattern.html)
+        - [fromPromise](./study/operators/fromPromise.html)
         - generate
         - interval
-        - never
+        - [never](./study/operators/never.html)
         - [of](./study/operators/of.html)
         - repeat
         - repeatWhen
         - range
-        - throw
+        - [throw](./study/operators/throw.html)
         - timer
 
     - Transformation Operators

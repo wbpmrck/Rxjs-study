@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>operator:fromEventPattern</title>
+
+    <link rel="stylesheet" href="../reset.css">
+    <link rel="stylesheet" href="../share.css">
+    <script src="../Rx.min.js"></script>
+</head>
+<body>
+
+<h1 class="operator-name">fromEventPattern</h1>
+
+<ul class="operator-params">
+    参数列表：
+    <li>
+        <span class="operator-params-name">addHandler</span>
+        <span class="operator-params-type">function(handler: Function): any</span>
+        <span class="operator-params-desc">1个以Handler为参数的函数，该函数负责向事件源订阅事件。该函数在Observable被subscribe的时候调用。这个handler被调用的时候,会向外部输出值，相当于调用Observable.next</span>
+    </li>
+    <li>
+        <span class="operator-params-name">removeHandler</span>
+        <span class="operator-params-type">function(handler: Function, signal?: any): void</span>
+        <span class="operator-params-desc">1个以Handler为参数的函数，该函数负责向事件源取消订阅事件。该函数在Observable被unsubscribe的时候调用</span>
+    </li>
+    <li>
+        <span class="operator-params-name">selector</span>
+        <span class="operator-params-type">function(...args: any): T></span>
+        <span class="operator-params-desc">处理函数，对event参数做处理，返回单个值</span>
+    </li>
+</ul>
+返回值:<h2 class="operator-ret"> Observable&lt;T&gt; </h2>
+
+<hr>
+<h1>珠宝图:</h1>
+<div class="marble-box">
+    <img src="fromEventPattern.png" alt="" class="operator-marble">
+</div>
+<hr>
+<h1>功能说明:</h1>
+<ul class="desc">
+    <li>fromEventPattern 对符合该模式的对象进行监听，并把事件参数作为输出emit出去</li>
+</ul>
+<hr>
+<h1>备注事项:</h1>
+<ul class="notice">
+    <li></li>
+</ul>
+
+<div class="demo">
+    <span>点击不同按钮查看不同demo 代码效果</span>
+    <button onclick="demo1();">demo1</button>
+    <button onclick="demo2();">demo2</button>
+</div>
+
+<script>
+    function demo1(){
+        console.log("fromEventPattern + 自定义模式:");
+
+
+        function addClickHandler(handler) {
+            document.addEventListener('click', handler);
+        }
+
+        function removeClickHandler(handler) {
+            document.removeEventListener('click', handler);
+        }
+
+        var clicks = Rx.Observable.fromEventPattern(
+            addClickHandler,
+            removeClickHandler
+        );
+        clicks.subscribe(x => console.log(x));
+    }
+
+    function demo2(){
+        console.log("fromEventPattern + 自定义模式+自定义输出:");
+
+
+        function addClickHandler(handler) {
+            document.addEventListener('click', handler);
+        }
+
+        function removeClickHandler(handler) {
+            document.removeEventListener('click', handler);
+        }
+
+        var clicks = Rx.Observable.fromEventPattern(
+            addClickHandler,
+            removeClickHandler,
+            (evt)=>{return evt.clientX.toString()+","+evt.clientY.toString()}
+        );
+        clicks.subscribe(x => console.log(x));
+    }
+
+
+
+</script>
+
+
+</body>
+</html>
