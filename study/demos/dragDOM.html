@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>demo:DragDOM</title>
+
+    <link rel="stylesheet" href="../reset.css">
+    <script src="../Rx.min.js"></script>
+    <style>
+        html,body{
+            width: 100%;
+            height: 100%;
+        }
+        #drag{
+
+            position: absolute;
+            display: inline-block;
+            width: 300px;
+            height: 300px;
+            background-color: #22ffff;
+
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+<h1>功能说明:</h1>
+<ul class="desc">
+    <li>鼠标拖动下面的方块</li>
+</ul>
+<hr>
+
+
+<div id="drag">
+
+</div>
+
+
+
+<script>
+    const dragDOM = document.getElementById('drag');
+    const body = document.body;
+
+    const mouseDown = Rx.Observable.fromEvent(dragDOM, 'mousedown');
+    const mouseUp = Rx.Observable.fromEvent(body, 'mouseup');
+    const mouseMove = Rx.Observable.fromEvent(body, 'mousemove');
+
+    mouseDown
+        .map(event => mouseMove.takeUntil(mouseUp))
+        .concatAll()
+//        .map(event => ({ x: event.clientX, y: event.clientY }))
+//        .scan((pre,now)=>{ return {
+//            pt:{x:now.x,y:now.y},
+//            offset:{x:now.x- (pre&&pre.pt?pre.pt.x:0),y:now.y- (pre&&pre.pt?pre.pt.y:0) }
+//        }
+//
+//        })
+        .subscribe({
+            next: pos => {
+                console.log(JSON.stringify(pos));
+//                if (pos.offset) {
+//                    dragDOM.style.left = (parseInt(dragDOM.style.left || 0) + pos.offset.x ) + 'px';
+////            dragDOM.style.top = pos.y + 'px';
+//                    dragDOM.style.top = (parseInt(dragDOM.style.top || 0) + pos.offset.y ) + 'px';
+//                }
+            },
+            error:()=> {console.log('complete')},
+            complete:() => {console.log('error')}
+    });
+
+</script>
+
+
+</body>
+</html>

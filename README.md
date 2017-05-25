@@ -92,11 +92,11 @@ study cases of Rxjs library
         - sample
         - sampleTime
         - single
-        - skip
+        - [skip](./study/operators/skip.html)
         - skipUntil
         - skipWhile
         - [take](./study/operators/take.html)
-        - takeLast
+        - [takeLast](./study/operators/takeLast.html)
         - [takeUntil](./study/operators/takeUntil.html)
         - takeWhile
         - throttle
@@ -163,3 +163,5 @@ study cases of Rxjs library
         - max
         - min
         - reduce
+- 综合练习
+    - [Drag DOM](./study/demos/dragDOM.html)
