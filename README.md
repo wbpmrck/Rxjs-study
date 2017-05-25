@@ -104,7 +104,7 @@ study cases of Rxjs library
 
     - Combination Operators
         - combineAll
-        - combineLatest
+        - [combineLatest](./study/operators/combineLatest.html)
         - [concat](./study/operators/concat.html)
         - [concatAll](./study/operators/concatAll.html)
         - exhaust

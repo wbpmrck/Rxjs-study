@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>operator:combineLatest(较为复杂，需要认真看下面说明)</title>
+
+    <link rel="stylesheet" href="../reset.css">
+    <link rel="stylesheet" href="../share.css">
+    <script src="../Rx.min.js"></script>
+</head>
+<body>
+
+<h1 class="operator-name">combineLatest</h1>
+
+<ul class="operator-params">
+    参数列表：
+    <li>
+        <span class="operator-params-name">observables</span>
+        <span class="operator-params-type">ObservableInput,...ObservableInput  或者 [...ObservableInput]</span>
+        <span class="operator-params-desc">1个或者多个Observable(也可以是observable数组),他们会被用来与source进行combine</span>
+    </li>
+    <li>
+        <span class="operator-params-name">project</span>
+        <span class="operator-params-type">function(val1,val2,...) : T</span>
+        <span class="operator-params-desc">(可选)用于对参与combine的数据进行操作，并返回要发射的数据，如果不填，则默认返回[val1,val2,...]。</span>
+    </li>
+    <li>
+        <span class="operator-params-name">scheduler</span>
+        <span class="operator-params-type">Scheduler</span>
+        <span class="operator-params-desc">调度器</span>
+    </li>
+
+
+</ul>
+返回值:<h2 class="operator-ret"> Observable</h2>
+
+<hr>
+<h1>珠宝图:</h1>
+<div class="marble-box">
+    <img src="combineLatest.png" alt="" class="operator-marble">
+</div>
+<hr>
+<h1>功能说明:</h1>
+<ul class="desc">
+    <li>combineLatest 会订阅传入的所有observables.</li>
+    <li>combineLatest内部使用一个数组保存所有observables最近一次发出的值。</li>
+    <li>如果传入空数组，combineLatest会立刻complete。</li>
+    <li>combineLatest 会等待每一个observable至少emit一个值，然后才开始输出。这就意味着，如果存在一个source在其他source发射value之前发射了多个值
+    那只有最后一个有效，其他的都被覆盖了</li>
+    <li>如果有一个source没有emit任何value就complete了，那么整个combine也会complete</li>
+    <li>如果右一个source既没有emit任何value,也没有complete,那么整个combine也会一直等，什么也不emit.因为他必须等所有source至少emit一个值</li>
+    <li>一旦所有source都发出过value,那么combine会等所有source都complete才complete。此时哪怕有若干source已经complete,但是他们的最后一次emit的值仍然会被使用</li>
+    <li>任何一个source发出error,整个combine发出Error,并且退订其他所有source</li>
+    <li></li>
+</ul>
+<hr>
+<h1>备注事项:</h1>
+<ul class="notice">
+    <li>combineLatest 一定会等到所有source都至少发出1个值</li>
+</ul>
+
+<div class="demo">
+    <span>点击不同按钮查看不同demo 代码效果</span>
+    <button onclick="demo1();">demo1</button>
+    <button onclick="demo2();">demo2</button>
+    <button onclick="demo3();">demo3</button>
+</div>
+
+<script>
+    function demo1(){
+        console.log("combineLatest:2个timer刚好错开0.5s,他们的值交替增加。不提供project function,会直接输出[value1,value2]")
+
+        const firstTimer = Rx.Observable.timer(0, 1000); // emit 0, 1, 2... after every second, starting from now
+        const secondTimer = Rx.Observable.timer(500, 1000); // emit 0, 1, 2... after every second, starting 0,5s from now
+        const combinedTimers = Rx.Observable.combineLatest(firstTimer, secondTimer);
+        combinedTimers.subscribe(value => console.log(value));
+        // Logs
+        // [0, 0] after 0.5s
+        // [1, 0] after 1s
+        // [1, 1] after 1.5s
+        // [2, 1] after 2s
+    }
+    function demo2() {
+
+        console.log("combineLatest:2个timer刚好错开0.5s,他们的值交替增加。提供project function,对他们的值进行累加(console中第三个位置数字)")
+
+        const firstTimer = Rx.Observable.timer(0, 1000); // emit 0, 1, 2... after every second, starting from now
+        const secondTimer = Rx.Observable.timer(500, 1000); // emit 0, 1, 2... after every second, starting 0,5s from now
+        const combinedTimers = Rx.Observable.combineLatest(firstTimer, secondTimer,(val1,val2)=>[val1,val2,val1+val2]);
+        combinedTimers.subscribe(value => console.log(value));
+    }
+    function demo3() {
+
+        console.log("combineLatest:在2个timer上添加了一个鼠标点击事件，所以必须至少点击一次图片之后，才能看到输出.并且过程中点击图片，会立刻输出一个值，此时其他source都是用最后一次的值来计算")
+
+        const sourceOfMouse = Rx.Observable.fromEvent(document,"click").filter((evt)=>evt.target.tagName==='IMG');
+        const firstTimer = Rx.Observable.timer(0, 1000); // emit 0, 1, 2... after every second, starting from now
+        const secondTimer = Rx.Observable.timer(500, 1000); // emit 0, 1, 2... after every second, starting 0,5s from now
+        const combinedTimers = Rx.Observable.combineLatest(firstTimer, secondTimer,sourceOfMouse,(val1,val2,evt)=>[val1,val2,evt,val1+val2]);
+        combinedTimers.subscribe(value => console.log(value));
+    }
+</script>
+
+
+</body>
+</html>
