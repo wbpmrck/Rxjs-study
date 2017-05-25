@@ -109,7 +109,7 @@ study cases of Rxjs library
         - [concatAll](./study/operators/concatAll.html)
         - exhaust
         - forkJoin
-        - merge
+        - [merge](./study/operators/merge.html)
         - mergeAll
         - race
         - [startWith](./study/operators/startWith.html)
