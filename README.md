@@ -88,7 +88,7 @@ study cases of Rxjs library
         - ignoreElements
         - audit
         - auditTime
-        - last
+        - [last](./study/operators/last.html)
         - sample
         - sampleTime
         - single
@@ -105,14 +105,14 @@ study cases of Rxjs library
     - Combination Operators
         - combineAll
         - combineLatest
-        - concat
+        - [concat](./study/operators/concat.html)
         - [concatAll](./study/operators/concatAll.html)
         - exhaust
         - forkJoin
         - merge
         - mergeAll
         - race
-        - startWith
+        - [startWith](./study/operators/startWith.html)
         - [switch](./study/operators/switch.html)
         - withLatestFrom
         - zip

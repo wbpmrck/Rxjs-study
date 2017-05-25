@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>operator:startWith</title>
+
+    <link rel="stylesheet" href="../reset.css">
+    <link rel="stylesheet" href="../share.css">
+    <script src="../Rx.min.js"></script>
+</head>
+<body>
+
+<h1 class="operator-name">startWith</h1>
+
+<ul class="operator-params">
+    参数列表：
+    <li>
+        <span class="operator-params-name">values</span>
+        <span class="operator-params-type">... T</span>
+        <span class="operator-params-desc">1个或者多个值,他们会被立刻发出，之后才是source的值</span>
+    </li>
+    <li>
+        <span class="operator-params-name">scheduler</span>
+        <span class="operator-params-type">Scheduler</span>
+        <span class="operator-params-desc"></span>
+    </li>
+
+
+</ul>
+返回值:<h2 class="operator-ret"> Observable</h2>
+
+<hr>
+<h1>珠宝图:</h1>
+<div class="marble-box">
+    <img src="startWith.png" alt="" class="operator-marble">
+</div>
+<hr>
+<h1>功能说明:</h1>
+<ul class="desc">
+    <li>startWith 把传入的值先同步、立即发射出来，然后才发射source</li>
+</ul>
+<hr>
+<h1>备注事项:</h1>
+<ul class="notice">
+    <li>startWith经常被用来设置初始状态</li>
+</ul>
+
+<div class="demo">
+    <span>点击不同按钮查看不同demo 代码效果</span>
+    <button onclick="demo1();">demo1</button>
+</div>
+
+<script>
+    function demo1(){
+        console.log("startWith:给1s的计时器的开头增加3个输出:10,20,30。")
+        var source = Rx.Observable.interval(1000);
+        var example = source.startWith(10,20,30);
+
+        example.subscribe({
+            next: (value) => { console.log(value); },
+            error: (err) => { console.log('Error: ' + err); },
+            complete: () => { console.log('complete'); }
+        });
+// 10
+// 20
+// 30
+// 0
+// 1
+// 2
+// 3...
+    }
+</script>
+
+
+</body>
+</html>
