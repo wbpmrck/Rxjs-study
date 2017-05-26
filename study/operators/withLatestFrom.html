@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>operator:withLatestFrom(较为复杂，需要认真看下面说明)</title>
+
+    <link rel="stylesheet" href="../reset.css">
+    <link rel="stylesheet" href="../share.css">
+    <script src="../Rx.min.js"></script>
+</head>
+<body>
+
+<h1 class="operator-name">withLatestFrom</h1>
+
+<ul class="operator-params">
+    参数列表：
+    <li>
+        <span class="operator-params-name">other</span>
+        <span class="operator-params-type">ObservableInput,...ObservableInput  或者 [...ObservableInput]</span>
+        <span class="operator-params-desc">1个或者多个Observable(也可以是observable数组),他们会被用来与source进行 combine</span>
+    </li>
+    <li>
+        <span class="operator-params-name">project</span>
+        <span class="operator-params-type">function(val1,val2,...) : T</span>
+        <span class="operator-params-desc">(可选)用于对参与combine的数据进行操作，并返回要发射的数据，如果不填，则默认返回[val1,val2,...]。</span>
+    </li>
+</ul>
+返回值:<h2 class="operator-ret"> Observable</h2>
+
+<hr>
+<h1>珠宝图:</h1>
+<div class="marble-box">
+    <img src="withLatestFrom.png" alt="" class="operator-marble">
+</div>
+<hr>
+<h1>功能说明:</h1>
+<ul class="desc">
+    <li>withLatestFrom 会订阅传入的所有observables.其中存在一个主source</li>
+    <li>主source每发出一个value,withLastFrom会查看其他Observable发出的最后一个值，并且调用project,并输出</li>
+    <li>只有当每个observable都至少发出过一个值的时候，才会输出value</li>
+    <li>当主source complete的时候，withLastFrom才会complete</li>
+</ul>
+<hr>
+<h1>备注事项:</h1>
+<ul class="notice">
+    <li>withLatestFrom 一定会等到所有source都至少发出1个值</li>
+</ul>
+
+<div class="demo">
+    <span>点击不同按钮查看不同demo 代码效果</span>
+    <button onclick="demo1();">demo1</button>
+    <button onclick="demo2();">demo2</button>
+    <button onclick="demo3();">demo3</button>
+</div>
+
+<script>
+    function demo1(){
+        console.log("withLatestFrom:主source是点击文档事件，withLatestFrom的对象是一个1s的计时器。只有点击的时候才会看到输出")
+        var clicks = Rx.Observable.fromEvent(document, 'click');
+        var timer = Rx.Observable.interval(1000);
+        var result = clicks.withLatestFrom(timer,(evt,num)=>{return [evt.clientX,evt.clientY,num]});
+        result.subscribe({
+            next: (value) => { console.log(value); },
+            error: (err) => { console.log('Error: ' + err); },
+            complete: () => { console.log('complete'); }
+        });
+    }
+    function demo2(){
+        console.log("withLatestFrom:主source complete的时候，才会complete")
+        var main = Rx.Observable.from('hello').zip(Rx.Observable.interval(500), (x, y) => x);
+        var some = Rx.Observable.from([0,1,0,0,0,1,0,0]).zip(Rx.Observable.interval(300), (x, y) => x);
+
+        var example = main.withLatestFrom(some, (x, y) => {
+            return y === 1 ? x.toUpperCase() : x;
+        });
+
+        example.subscribe({
+            next: (value) => { console.log(value); },
+            error: (err) => { console.log('Error: ' + err); },
+            complete: () => { console.log('complete'); }
+        });
+    }
+    function demo3() {
+        console.log("withLatestFrom:主source error 的时候，才会 error.这个例子里，2个source都是直接同步输出的，所以some保留的都是最后一个值")
+
+        var error =Rx.Observable.throw('Oop!');
+
+        var main = Rx.Observable.from('hello').concat(error);
+        var some = Rx.Observable.from([0,1,0,0,0,1]);
+
+        var example = main.withLatestFrom(some, (x, y) => {
+            return y === 1 ? x.toUpperCase() : x;
+        });
+
+        example.subscribe({
+            next: (value) => { console.log(value); },
+            error: (err) => { console.log('Error: ' + err); },
+            complete: () => { console.log('complete'); }
+        });
+    }
+
+</script>
+
+
+</body>
+</html>

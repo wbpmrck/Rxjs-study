@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>operator:zip</title>
+
+    <link rel="stylesheet" href="../reset.css">
+    <link rel="stylesheet" href="../share.css">
+    <script src="../Rx.min.js"></script>
+</head>
+<body>
+
+<h1 class="operator-name">zip</h1>
+
+<ul class="operator-params">
+    参数列表：
+    <li>
+        <span class="operator-params-name">observables</span>
+        <span class="operator-params-type">... Observable</span>
+        <span class="operator-params-desc">要zip的一个或者多个observable</span>
+    </li>
+    <li>
+        <span class="operator-params-name">project</span>
+        <span class="operator-params-type">function(val1,val2,...):T</span>
+        <span class="operator-params-desc">(可选),处理值的函数，他的参数是每一个Source在当前序号上emit的值。返回值会当做zip的返回。默认为[v1,v2,v3]</span>
+    </li>
+
+
+</ul>
+返回值:<h2 class="operator-ret"> Observable &lt;T&gt;</h2>
+
+<hr>
+<h1>珠宝图:</h1>
+<div class="marble-box">
+    <img src="zip.png" alt="" class="operator-marble">
+</div>
+<hr>
+<h1>功能说明:</h1>
+<ul class="desc">
+    <li>zip 订阅多个Source,并且记录他们每个位置上的发射值的顺序，从1开始，当所有Source都在该序号上发射了值，zip才向外输出</li>
+    <li>zip complete的条件：如果一个source没有emit任何值就直接complete.或者某个source发射了complete,且当前zip发射的序号和这个source最后一次发射的相等</li>
+    <li>zip error的条件：任何一个source发射了error</li>
+</ul>
+<hr>
+<h1>备注事项:</h1>
+<ul class="notice">
+    <li>切忌把emit频率相差太大的多个source进行zip,这样可能会浪费很多内存，因为zip会缓存发射较快的source的值</li>
+</ul>
+
+<div class="demo">
+    <span>点击不同按钮查看不同demo 代码效果</span>
+    <button onclick="demo1();">demo1</button>
+    <button onclick="demo2();">demo2</button>
+    <button onclick="demo3();">demo3</button>
+</div>
+
+<script>
+    function demo1(){
+        console.log("zip :会把同样位置的值进行处理之后，emit出去。这里是把同样位置几个值拼成一个对象");
+
+        var age$ = Rx.Observable.of(21,22,23,24);
+        var sex$ = Rx.Observable.of("male","male","female","female");
+        var name$ = Rx.Observable.of("jack","john","james","lucy");
+        var example = Rx.Observable.zip(age$,sex$,name$,(age,sex,name)=>{ return {age,sex,name} });
+
+        example.subscribe({
+            next: (value) => { console.log(value); },
+            error: (err) => { console.log('Error: ' + err); },
+            complete: () => { console.log('complete'); }
+        });
+    }
+    function demo2(){
+        console.log("zip :demo1的基础上，增加了鼠标点击图片的输入事件，可以看到，只有点击一次，才会把下一个值输出.同时可以看到，虽然鼠标source没有结束，但是只要存在一个结束了，zip就结束了");
+
+        var age$ = Rx.Observable.of(21,22,23);
+        var sex$ = Rx.Observable.of("male","male","female","female");
+        var name$ = Rx.Observable.of("jack","john","james","lucy");
+        const sourceOfMouse$ = Rx.Observable.fromEvent(document,"click").filter((evt)=>evt.target.tagName==='IMG');
+        var example = Rx.Observable.zip(age$,sex$,name$,sourceOfMouse$,(age,sex,name,clickEvt)=>{ return {age,sex,name} });
+
+        example.subscribe({
+            next: (value) => { console.log(value); },
+            error: (err) => { console.log('Error: ' + err); },
+            complete: () => { console.log('complete'); }
+        });
+    }
+    function demo3(){
+        console.log("zip :任何一个source发出error,zip就会error");
+
+            var error =Rx.Observable.throw('Oop!');
+            var age$ = Rx.Observable.concat(Rx.Observable.of(21,22,23),error);
+            var sex$ = Rx.Observable.of("male","male","female","female");
+            var name$ = Rx.Observable.of("jack","john","james","lucy");
+            var example = Rx.Observable.zip(age$,sex$,name$,(age,sex,name)=>{ return {age,sex,name} });
+
+            example.subscribe({
+                next: (value) => { console.log(value); },
+                    error: (err) => { console.log('Error: ' + err); },
+                complete: () => { console.log('complete'); }
+            });
+    }
+
+</script>
+
+
+</body>
+</html>

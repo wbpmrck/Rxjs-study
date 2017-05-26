@@ -53,10 +53,7 @@
         var obs2 = Rx.Observable.interval(500).take(4);
         var obs3 = Rx.Observable.interval(100).take(3);
 
-        var source = obs1.concat(obs2, obs3);
-
-        var example = source.concat();
-
+        var example = obs1.concat(obs2, obs3);
         example.subscribe({
             next: (value) => { console.log(value); },
             error: (err) => { console.log('Error: ' + err); },

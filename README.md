@@ -114,8 +114,8 @@ study cases of Rxjs library
         - race
         - [startWith](./study/operators/startWith.html)
         - [switch](./study/operators/switch.html)
-        - withLatestFrom
-        - zip
+        - [withLatestFrom](./study/operators/withLatestFrom.html)
+        - [zip](./study/operators/zip.html)
         - zipAll
 
     - Multicasting Operators
