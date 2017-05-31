@@ -48,9 +48,9 @@ study cases of Rxjs library
         - [timer](./study/operators/timer.html)
 
     - Transformation Operators
-        - buffer
+        - [buffer](./study/operators/buffer.html)
         - bufferCount
-        - bufferTime
+        - [bufferTime](./study/operators/bufferTime.html)
         - bufferToggle
         - bufferWhen
         - concatMap
@@ -66,7 +66,7 @@ study cases of Rxjs library
         - pairwise
         - partition
         - pluck
-        - scan
+        - [scan](./study/operators/scan.html)
         - [switchMap](./study/operators/switchMap.html)
         - switchMapTo
         - window
@@ -165,3 +165,4 @@ study cases of Rxjs library
         - reduce
 - 综合练习
     - [Drag DOM](./study/demos/dragDOM.html)
+    - [DragDOM_extend](./study/demos/dragDOM_extend.html)

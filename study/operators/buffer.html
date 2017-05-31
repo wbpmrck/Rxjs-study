@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>operator:buffer</title>
+
+    <link rel="stylesheet" href="../reset.css">
+    <link rel="stylesheet" href="../share.css">
+    <script src="../Rx.min.js"></script>
+</head>
+<body>
+
+<h1 class="operator-name">buffer</h1>
+
+<ul class="operator-params">
+    参数列表：
+    <li>
+        <span class="operator-params-name">closingNotifier</span>
+        <span class="operator-params-type">Observable&lt;any&gt;</span>
+        <span class="operator-params-desc">一个Observable，用于告诉source应该把当前已经缓存的值发出去。当Observable来值的时候，source被缓存的数据会被push出去</span>
+    </li>
+    <li>
+        <span class="operator-params-name">seed</span>
+        <span class="operator-params-type">T | R</span>
+        <span class="operator-params-desc">(可选)accumulator的acc的初始值。</span>
+    </li>
+
+
+</ul>
+返回值:<h2 class="operator-ret"> Observable &lt;T[]&gt;</h2>
+
+<hr>
+<h1>珠宝图:</h1>
+<div class="marble-box">
+    <img src="buffer.png" alt="" class="operator-marble">
+</div>
+<hr>
+<h1>功能说明:</h1>
+<ul class="desc">
+    <li>buffer 会一直缓存source的值，一直到notifier有新的值发出，此时被缓存的值会以数组形式发出.</li>
+</ul>
+<hr>
+<h1>备注事项:</h1>
+<ul class="notice">
+    <li>buffer的数据即使没有发送完毕，如果source发出了complete，buffer也会complete</li>
+</ul>
+
+<div class="demo">
+    <span>点击不同按钮查看不同demo 代码效果</span>
+    <button onclick="demo1();">demo1</button>
+    <button onclick="demo2();">demo2</button>
+</div>
+
+<script>
+    function demo1(){
+        console.log("buffer :每隔2s才会输出一次Buffer");
+        var source = Rx.Observable.interval(300); //值会持续2.7s,每隔300ms产生一个数字
+        var source2 = Rx.Observable.interval(2000); //每隔2s才会输出一次Buffer
+        var example = source.buffer(source2);
+
+        example.subscribe({
+            next: (value) => { console.log(value); },
+            error: (err) => { console.log('Error: ' + err); },
+            complete: () => { console.log('complete'); }
+        });
+    }
+    function demo2(){
+        console.log("buffer :只要source结束了，buffer会立刻complete,即使还有数据没有发送");
+        var source = Rx.Observable.interval(300).take(9); //值会持续2.7s,每隔300ms产生一个数字
+        var source2 = Rx.Observable.interval(2000); //每隔2s才会输出一次Buffer
+        var example = source.buffer(source2);
+
+        example.subscribe({
+            next: (value) => { console.log(value); },
+            error: (err) => { console.log('Error: ' + err); },
+            complete: () => { console.log('complete'); }
+        });
+    }
+</script>
+
+
+</body>
+</html>

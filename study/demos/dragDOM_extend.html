@@ -63,17 +63,18 @@
 </div>
 
 
-<script>const video = document.getElementById('video');
-const anchor = document.getElementById('anchor');
+<script>
 
-const scroll = Rx.Observable.fromEvent(document, 'scroll');
-const mouseDown = Rx.Observable.fromEvent(video, 'mousedown')
-const mouseUp = Rx.Observable.fromEvent(document, 'mouseup')
-const mouseMove = Rx.Observable.fromEvent(document, 'mousemove')
+    const video = document.getElementById('video');
+    const anchor = document.getElementById('anchor');
+    const scroll = Rx.Observable.fromEvent(document, 'scroll');
+    const mouseDown = Rx.Observable.fromEvent(video, 'mousedown')
+    const mouseUp = Rx.Observable.fromEvent(document, 'mouseup')
+    const mouseMove = Rx.Observable.fromEvent(document, 'mousemove')
 
-const validValue = (value, max, min) => {
-    return Math.min(Math.max(value, min), max)
-}
+    const validValue = (value, max, min) => {
+        return Math.min(Math.max(value, min), max)
+    }
 
 scroll
     .map(e => anchor.getBoundingClientRect().bottom < 0)
@@ -90,10 +91,15 @@ mouseDown
     .map(e => mouseMove.takeUntil(mouseUp))
     .concatAll()
     .withLatestFrom(mouseDown, (move, down) => {
-        return {
+        var p= {
             x: validValue(move.clientX - down.offsetX, window.innerWidth - 320, 0),
             y: validValue(move.clientY - down.offsetY, window.innerHeight - 180, 0)
         }
+        //offsetX,y 是鼠标down时，相对被点击的video标签左上角的位移，然后move.clientX,Y,是点击、移动时鼠标相对视口左上角的位移。
+        //2者相减，就是video标签左上角(left,top)应该取的值
+
+//        console.log(`move=(${move.clientX},${move.clientY}),down=(${down.offsetX},${down.offsetY})`);
+        return p;
     })
     .subscribe(pos => {
         video.style.top = pos.y + 'px';
