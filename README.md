@@ -49,7 +49,7 @@ study cases of Rxjs library
 
     - Transformation Operators
         - [buffer](./study/operators/buffer.html)
-        - bufferCount
+        - [bufferCount](./study/operators/bufferCount.html)
         - [bufferTime](./study/operators/bufferTime.html)
         - bufferToggle
         - bufferWhen
@@ -134,7 +134,7 @@ study cases of Rxjs library
 
     - Utility Operators
         - do
-        - delay
+        - [delay](./study/operators/bufferTime.html)
         - delayWhen
         - dematerialize
         - finally
