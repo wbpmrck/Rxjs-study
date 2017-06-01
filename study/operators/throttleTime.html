@@ -1,0 +1,65 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>operator:throttleTime</title>
+
+    <link rel="stylesheet" href="../reset.css">
+    <link rel="stylesheet" href="../share.css">
+    <script src="../Rx.min.js"></script>
+</head>
+<body>
+
+<h1 class="operator-name">throttleTime</h1>
+
+<ul class="operator-params">
+    参数列表：
+    <li>
+        <span class="operator-params-name">duration</span>
+        <span class="operator-params-type">number</span>
+        <span class="operator-params-desc">单位ms,表示发射完一个值之后，冷却的时间。</span>
+    </li>
+    <li>
+        <span class="operator-params-name">scheduler</span>
+        <span class="operator-params-type">Scheduler</span>
+        <span class="operator-params-desc">(可选)用来决定timer的调度器。</span>
+    </li>
+
+</ul>
+返回值:<h2 class="operator-ret"> Observable &lt;T&gt;</h2>
+
+<hr>
+<h1>珠宝图:</h1>
+<div class="marble-box">
+    <img src="throttleTime.png" alt="" class="operator-marble">
+</div>
+<hr>
+<h1>功能说明:</h1>
+<ul class="desc">
+    <li>它内置了一个timer,默认是disable的。等到emit一个value之后，timer被启动，在timer有效期内，任何新的value都不会输出。</li>
+    <li>一旦timer失效，新的value来了之后会被输出，同时也会激活timer,如此往复</li>
+</ul>
+<hr>
+<h1>备注事项:</h1>
+<ul class="notice">
+    <li>throttleTime 主要用于控制输出的频率一定在某个频率，不会等太久，也不会太快</li>
+</ul>
+
+<div class="demo">
+    <span>点击不同按钮查看不同demo 代码效果</span>
+    <button onclick="demo1();">demo1</button>
+</div>
+
+<script>
+    function demo1(){
+        console.log("throttleTime :1s内肯定会输出，且只输出一次点击");
+        var clicks = Rx.Observable.fromEvent(document, 'click');
+        var result = clicks.throttleTime(1000);
+        result.subscribe(evt => console.log(`${evt.clientX},${evt.clientY}`));
+    }
+</script>
+
+
+</body>
+</html>

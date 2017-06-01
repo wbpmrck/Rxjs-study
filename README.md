@@ -99,8 +99,8 @@ study cases of Rxjs library
         - [takeLast](./study/operators/takeLast.html)
         - [takeUntil](./study/operators/takeUntil.html)
         - takeWhile
-        - throttle
-        - throttleTime
+        - [throttle](./study/operators/throttle.html)
+        - [throttleTime](./study/operators/throttleTime.html)
 
     - Combination Operators
         - combineAll

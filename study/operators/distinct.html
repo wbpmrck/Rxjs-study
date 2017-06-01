@@ -1,0 +1,107 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>operator:distinct</title>
+
+    <link rel="stylesheet" href="../reset.css">
+    <link rel="stylesheet" href="../share.css">
+    <script src="../Rx.min.js"></script>
+</head>
+<body>
+
+<h1 class="operator-name">distinct</h1>
+
+<ul class="operator-params">
+    参数列表：
+    <li>
+        <span class="operator-params-name">keySelector</span>
+        <span class="operator-params-type">function</span>
+        <span class="operator-params-desc">(可选)一个函数，返回一个值，operator会用这个值进行相等的检测</span>
+    </li>
+    <li>
+        <span class="operator-params-name">flushes</span>
+        <span class="operator-params-type">observable</span>
+        <span class="operator-params-desc">(可选)一个Observable,他发出一个value,就会让distinct清空内部的缓存hash(使得下一个source.value一定不重复)</span>
+    </li>
+
+</ul>
+返回值:<h2 class="operator-ret"> Observabledistinct.png</h2>
+
+<hr>
+<h1>珠宝图:</h1>
+<div class="marble-box">
+    <img src="distinct.png" alt="" class="operator-marble">
+</div>
+<hr>
+<h1>功能说明:</h1>
+<ul class="desc">
+    <li>distinct 使用set来缓存source曾经emit过的value,当新的value来的时候，会检查是不是在set里，在的话不会发出</li>
+    <li>如果要比对的不是value本身，可以使用keySelector来返回要比对的数据</li>
+</ul>
+<hr>
+<h1>备注事项:</h1>
+<ul class="notice">
+    <li>distinct 内部会缓存value,所以存在性能风险，可以考虑定期使用flushes来清空缓存</li>
+    <li>尽量不要用distinct来处理无限大的数据集合，内存问题很大</li>
+</ul>
+
+<div class="demo">
+    <span>点击不同按钮查看不同demo 代码效果</span>
+    <button onclick="demo1();">demo1</button>
+    <button onclick="demo2();">demo2</button>
+    <button onclick="demo3();">demo3</button>
+</div>
+
+<script>
+    function demo1(){
+        console.log("distinct :输出不重复的值");
+
+        Rx.Observable.of(1, 1, 2, 2, 2, 1, 2, 3, 4, 3, 2, 1)
+            .distinct()
+            .subscribe(x => console.log(x)); // 1, 2, 3, 4
+    }
+
+    function demo2(){
+        console.log("distinct :，使用函数来设置需要比对项");
+
+        var source = Rx.Observable.from([{ value: 'a'}, { value: 'b' }, { value: 'c' }, { value: 'a' }, { value: 'c' }])
+            .zip(Rx.Observable.interval(300), (x, y) => x);
+        var example = source.distinct((x) => {
+            return x.value
+        });
+
+        example.subscribe({
+            next: (value) => { console.log(value); },
+            error: (err) => { console.log('Error: ' + err); },
+            complete: () => { console.log('complete'); }
+        });
+// {value: "a"}
+// {value: "b"}
+// {value: "c"}
+// complete
+    }
+    function demo3(){
+        console.log("distinct :，使用flush来定期刷新缓存set,避免内存问题，所以c会发出2次");
+        var source = Rx.Observable.from(['a', 'b', 'c', 'a', 'c'])
+            .zip(Rx.Observable.interval(300), (x, y) => x);
+        var flushes = Rx.Observable.interval(1300);
+        var example = source.distinct(null, flushes);
+
+        example.subscribe({
+            next: (value) => { console.log(value); },
+            error: (err) => { console.log('Error: ' + err); },
+            complete: () => { console.log('complete'); }
+        });
+// a
+// b
+// c
+// c
+// complete
+    }
+</script>
+
+
+</body>
+</html>
