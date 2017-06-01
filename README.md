@@ -76,8 +76,8 @@ study cases of Rxjs library
         - windowWhen
 
     - Filtering Operators
-        - debounce
-        - debounceTime
+        - [debounce](./study/operators/debounce.html)
+        - [debounceTime](./study/operators/debounceTime.html)
         - distinct
         - distinctKey
         - distinctUntilChanged

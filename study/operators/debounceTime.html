@@ -1,0 +1,65 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>operator:debounceTime</title>
+
+    <link rel="stylesheet" href="../reset.css">
+    <link rel="stylesheet" href="../share.css">
+    <script src="../Rx.min.js"></script>
+</head>
+<body>
+
+<h1 class="operator-name">debounceTime</h1>
+
+<ul class="operator-params">
+    参数列表：
+    <li>
+        <span class="operator-params-name">dueTime</span>
+        <span class="operator-params-type">number</span>
+        <span class="operator-params-desc">单位ms。表示operator保留最近发出的value的最长的时间</span>
+    </li>
+    <li>
+        <span class="operator-params-name">scheduler</span>
+        <span class="operator-params-type">Scheduler</span>
+        <span class="operator-params-desc">用来控制timeout的scheduler</span>
+    </li>
+
+</ul>
+返回值:<h2 class="operator-ret"> Observable</h2>
+
+<hr>
+<h1>珠宝图:</h1>
+<div class="marble-box">
+    <img src="debounceTime.png" alt="" class="operator-marble">
+</div>
+<hr>
+<h1>功能说明:</h1>
+<ul class="desc">
+    <li>debounceTime 把从Source拿到的value进行delay,但是如果有新的value到达，他会drop之前的value,并且重新计时</li>
+    <li>只有当等待时间超过dueTime的时候，才会发出value </li>
+</ul>
+<hr>
+<h1>备注事项:</h1>
+<ul class="notice">
+    <li>debounceTime 主要用于保存最近一段时间的最后一个值。可以用来限制value出现的频率</li>
+</ul>
+
+<div class="demo">
+    <span>点击不同按钮查看不同demo 代码效果</span>
+    <button onclick="demo1();">demo1</button>
+</div>
+
+<script>
+    function demo1(){
+        console.log("debounceTime :1s内重复的点击不会输出");
+        var clicks = Rx.Observable.fromEvent(document, 'click');
+        var result = clicks.debounceTime(1000);
+        result.subscribe(evt => console.log(`${evt.clientX},${evt.clientY}`));
+    }
+</script>
+
+
+</body>
+</html>
