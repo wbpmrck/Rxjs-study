@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <title>JS Bin</title>
+    <script src="../Rx.js"></script>
+
+    <style>
+        img{
+            position: absolute;
+            border-radius: 50%;
+            border: 3px white solid;
+            transform: translate3d(0,0,0);
+        }
+    </style>
+</head>
+<body>
+<img src="./img/head-cover6.jpg" alt="">
+<img src="./img/head-cover5.jpg" alt="">
+<img src="./img/head-cover4.jpg" alt="">
+<img src="./img/head-cover3.jpg" alt="">
+<img src="./img/head-cover2.jpg" alt="">
+<img src="./img/head-cover1.jpg" alt="">
+
+<script>
+    var imgList = document.getElementsByTagName('img');
+
+    var movePos = Rx.Observable.fromEvent(document, 'mousemove')
+        .map(e => ({ x: e.clientX, y: e.clientY }))
+
+    function followMouse(DOMArr) {
+        const delayTime = 600;
+        DOMArr.forEach((item, index) => {
+            movePos
+                .delay(delayTime * (Math.pow(0.65, index) + Math.cos(index / 4)) / 2)
+                .subscribe(function (pos){
+                    item.style.transform = 'translate3d(' + pos.x + 'px, ' + pos.y + 'px, 0)';
+                });
+        });
+    }
+
+    followMouse(Array.from(imgList))
+</script>
+</body>
+</html>

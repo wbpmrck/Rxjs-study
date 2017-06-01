@@ -166,3 +166,4 @@ study cases of Rxjs library
 - 综合练习
     - [Drag DOM](./study/demos/dragDOM.html)
     - [DragDOM_extend](./study/demos/dragDOM_extend.html)
+    - [follow_img](./study/demos/follow_img.html)
