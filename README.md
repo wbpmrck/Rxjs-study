@@ -128,7 +128,7 @@ study cases of Rxjs library
         - share
 
     - Error Handling Operators
-        - catch
+        - [catch](./study/operators/catch.html)
         - retry
         - retryWhen
 

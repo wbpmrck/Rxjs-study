@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>operator:catch</title>
+
+    <link rel="stylesheet" href="../reset.css">
+    <link rel="stylesheet" href="../share.css">
+    <script src="../Rx.min.js"></script>
+</head>
+<body>
+
+<h1 class="operator-name">catch</h1>
+
+<ul class="operator-params">
+    参数列表：
+    <li>
+        <span class="operator-params-name">selector</span>
+        <span class="operator-params-type">function</span>
+        <span class="operator-params-desc">处理函数，接收2个参数：err(捕获的异常),caughtObservable(源Observable).此函数返回的observable会被subscriber继续订阅，取代原先的Observable</span>
+    </li>
+
+
+</ul>
+返回值:<h2 class="operator-ret"> Observable</h2>
+
+<hr>
+<h1>珠宝图:</h1>
+<div class="marble-box">
+    <img src="catch.png" alt="" class="operator-marble">
+</div>
+<hr>
+<h1>功能说明:</h1>
+<ul class="desc">
+    <li>catch 在发生异常的时候，用于返回一个新的Observable或者抛出异常</li>
+</ul>
+<hr>
+<h1>备注事项:</h1>
+<ul class="notice">
+    <li>如果希望retry,则可以i直接返回 caughtObservable自身</li>
+</ul>
+
+<div class="demo">
+    <span>点击不同按钮查看不同demo 代码效果</span>
+    <button onclick="demo1();">demo1</button>
+    <button onclick="demo2();">demo2</button>
+</div>
+
+<script>
+    function demo1(){
+        console.log("catch :遇到4会发出异常，然后改为输出另外一个序列。");
+        Rx.Observable.of(1, 2, 3, 4, 5)
+            .map(n => {
+                if (n == 4) {
+                    throw 'four!';
+                }
+                return n;
+            })
+            .catch(err => Rx.Observable.of('I', 'II', 'III', 'IV', 'V'))
+            .subscribe(x => console.log(x));
+        // 1, 2, 3, I, II, III, IV, V
+    }
+    function demo2(){
+        console.log("catch :通过返回caughtObservable,实现retry的功能(每次到4就error+retry),取10个结束:");
+        Rx.Observable.of(1, 2, 3, 4, 5)
+            .zip(Rx.Observable.interval(1000),(n,t)=>n)
+            .map(n => {
+                if (n === 4) {
+                    throw 'four!';
+                }
+                return n;
+            })
+            .catch((err, caught) => caught)
+            .take(10)
+            .subscribe({
+                next: (value) => { console.log(value); },
+                error: (err) => { console.log('Error: ' + err); },
+                complete: () => { console.log('complete'); }
+            });
+        // 1, 2, 3, 1, 2, 3, ...
+    }
+</script>
+
+
+</body>
+</html>
