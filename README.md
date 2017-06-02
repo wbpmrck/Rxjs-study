@@ -78,9 +78,9 @@ study cases of Rxjs library
     - Filtering Operators
         - [debounce](./study/operators/debounce.html)
         - [debounceTime](./study/operators/debounceTime.html)
-        - distinct
+        - [distinct](./study/operators/distinct.html)
         - distinctKey
-        - distinctUntilChanged
+        - [distinctUntilChanged](./study/operators/distinctUntilChanged.html)
         - distinctUntilKeyChanged
         - elementAt
         - [filter](./study/operators/filter.html)

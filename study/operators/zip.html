@@ -52,6 +52,7 @@
     <button onclick="demo1();">demo1</button>
     <button onclick="demo2();">demo2</button>
     <button onclick="demo3();">demo3</button>
+    <button onclick="demo4();">demo4</button>
 </div>
 
 <script>
@@ -92,6 +93,19 @@
             var sex$ = Rx.Observable.of("male","male","female","female");
             var name$ = Rx.Observable.of("jack","john","james","lucy");
             var example = Rx.Observable.zip(age$,sex$,name$,(age,sex,name)=>{ return {age,sex,name} });
+
+            example.subscribe({
+                next: (value) => { console.log(value); },
+                    error: (err) => { console.log('Error: ' + err); },
+                complete: () => { console.log('complete'); }
+            });
+    }
+    function demo4(){
+        console.log("zip :实现打字机效果");
+
+            var chars =Rx.Observable.from(['h','e','l','l','o']);
+            var time =Rx.Observable.interval(1000);
+            var example = Rx.Observable.zip(chars,time,(c,num)=>{ return c });
 
             example.subscribe({
                 next: (value) => { console.log(value); },
