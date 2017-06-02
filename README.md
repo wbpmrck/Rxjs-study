@@ -129,8 +129,8 @@ study cases of Rxjs library
 
     - Error Handling Operators
         - [catch](./study/operators/catch.html)
-        - retry
-        - retryWhen
+        - [retry](./study/operators/retry.html)
+        - [retryWhen](./study/operators/retryWhen.html)
 
     - Utility Operators
         - do

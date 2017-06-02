@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>operator:retryWhen</title>
+
+    <link rel="stylesheet" href="../reset.css">
+    <link rel="stylesheet" href="../share.css">
+    <script src="../Rx.min.js"></script>
+</head>
+<body>
+
+<h1 class="operator-name">retryWhen</h1>
+
+<ul class="operator-params">
+    参数列表：
+    <li>
+        <span class="operator-params-name">notificationHandler</span>
+        <span class="operator-params-type">function(errors: Observable): Observable</span>
+        <span class="operator-params-desc">一个函数，接收参数为一个source里发出的error的observable,返回一个Observable.返回的observable每emit一个值，retryWhen就会继续重新订阅一次Source.</span>
+    </li>
+</ul>
+返回值:<h2 class="operator-ret"> Observable</h2>
+
+<hr>
+<h1>珠宝图:</h1>
+<div class="marble-box">
+    <img src="retryWhen.png" alt="" class="operator-marble">
+</div>
+<hr>
+<h1>功能说明:</h1>
+<ul class="desc">
+    <li>每次notifier返回的Observable输出一个值，就对Source进行重试</li>
+</ul>
+<hr>
+<h1>备注事项:</h1>
+<ul class="notice">
+</ul>
+
+<div class="demo">
+    <span>点击不同按钮查看不同demo 代码效果</span>
+    <button onclick="demo1();">demo1</button>
+    <button onclick="demo2();">demo2</button>
+</div>
+
+<script>
+    function demo1(){
+        console.log("retryWhen :到2就会出错，然后延迟1s重试。");
+        var source = Rx.Observable.interval(1000)
+            .map(function(n) {
+                if(n === 2) {
+                    throw 'ex';
+                }
+                return n;
+            })
+            .retryWhen(function(errors) {
+                return errors.delay(1000);
+            })
+            .take(6);
+
+        var subscription = source.subscribe(
+            function (x) {
+                console.log('Next: ' + x);
+            },
+            function (err) {
+                console.log('Error: ' + err);
+            },
+            function () {
+                console.log('Completed');
+            });
+
+// => Next: 0
+// => Next: 1
+// 1000 ms pass
+// => Next: 0
+// => Next: 1
+// 1000 ms pass
+// => Next: 0
+// => Next: 1
+// => Completed
+    }
+    function demo2(){
+        console.log("retryWhen :重试2次之后，不继续重试。");
+        var source = Rx.Observable.interval(1000)
+            .map(function(n) {
+                if(n === 2) {
+                    throw 'ex';
+                }
+                return n;
+            })
+            .retryWhen(function(errors) {
+                return errors.scan(function(errorCount, err) {
+                    if(errorCount >= 2) {
+                        throw err;
+                    }
+                    return errorCount + 1;
+                }, 0);
+            });
+
+        var subscription = source.subscribe(
+            function (x) {
+                console.log('Next: ' + x);
+            },
+            function (err) {
+                console.log('Error: ' + err);
+            },
+            function () {
+                console.log('Completed');
+            });
+
+// => Next: 0
+// => Next: 1
+// => Next: 0
+// => Next: 1
+// => Next: 0
+// => Next: 1
+// => Error: 'ex'
+    }
+</script>
+
+
+</body>
+</html>
