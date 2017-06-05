@@ -56,7 +56,7 @@
             .retryWhen(function(errors) {
                 return errors.delay(1000);
             })
-            .take(6);
+            .take(60);
 
         var subscription = source.subscribe(
             function (x) {

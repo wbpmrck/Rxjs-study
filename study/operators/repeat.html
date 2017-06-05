@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>operator:retry</title>
+    <title>operator:repeat</title>
 
     <link rel="stylesheet" href="../reset.css">
     <link rel="stylesheet" href="../share.css">
@@ -10,14 +10,14 @@
 </head>
 <body>
 
-<h1 class="operator-name">retry</h1>
+<h1 class="operator-name">repeat</h1>
 
 <ul class="operator-params">
     参数列表：
     <li>
         <span class="operator-params-name">count</span>
         <span class="operator-params-type">number</span>
-        <span class="operator-params-desc">重试的次数</span>
+        <span class="operator-params-desc">重复的次数</span>
     </li>
 
 
@@ -27,17 +27,17 @@
 <hr>
 <h1>珠宝图:</h1>
 <div class="marble-box">
-    <img src="retry.png" alt="" class="operator-marble">
+    <img src="repeat.png" alt="" class="operator-marble">
 </div>
 <hr>
 <h1>功能说明:</h1>
 <ul class="desc">
-    <li>retry 在发生异常的时候，会重新订阅Source, 持续count次</li>
+    <li>repeat 在Source发出complete的时候，继续重新订阅Source.持续count次</li>
 </ul>
 <hr>
 <h1>备注事项:</h1>
 <ul class="notice">
-    <li>retry的次数达到之后，再出现error,会直接抛给subscriber</li>
+    <li>repeat(0)会直接返回Empty</li>
 </ul>
 
 <div class="demo">
@@ -48,35 +48,48 @@
 
 <script>
     function demo1(){
-        console.log("retry :d之后会发出异常，然后一直重试。");
-        var source = Rx.Observable.from(['a','b','c','d',2])
+        console.log("repeat :1次。");
+        var source = Rx.Observable.from(['a','b','c'])
             .zip(Rx.Observable.interval(500), (x,y) => x);
 
-        var example = source
-            .map(x => x.toUpperCase())
-            .retry();
+        var example = source.repeat(1);
 
         example.subscribe({
             next: (value) => { console.log(value); },
             error: (err) => { console.log('Error: ' + err); },
             complete: () => { console.log('complete'); }
         });
+
+// a
+// b
+// c
+// a
+// b
+// c
+// complete
     }
     function demo2(){
-        console.log("retry :d之后会发出异常，然后重试2次结束。");
-        var source = Rx.Observable.from(['a','b','c','d',2])
+        console.log("repeat :0次。");
+        var source = Rx.Observable.from(['a','b','c'])
             .zip(Rx.Observable.interval(500), (x,y) => x);
 
-        var example = source
-            .map(x => x.toUpperCase())
-            .retry(2);
+        var example = source.repeat(0);
 
         example.subscribe({
             next: (value) => { console.log(value); },
             error: (err) => { console.log('Error: ' + err); },
             complete: () => { console.log('complete'); }
         });
+
+// a
+// b
+// c
+// a
+// b
+// c
+// complete
     }
+
 </script>
 
 

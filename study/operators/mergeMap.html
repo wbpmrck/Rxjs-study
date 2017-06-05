@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>operator:merge</title>
+    <title>operator:mergeMap</title>
 
     <link rel="stylesheet" href="../reset.css">
     <link rel="stylesheet" href="../share.css">
@@ -10,46 +10,42 @@
 </head>
 <body>
 
-<h1 class="operator-name">merge</h1>
+<h1 class="operator-name">mergeMap</h1>
 
 <ul class="operator-params">
     参数列表：
     <li>
-        <span class="operator-params-name">other</span>
-        <span class="operator-params-type">...ObservableInput</span>
-        <span class="operator-params-desc">1个或者多个Observable,他的值会被订阅，和source的值一起，各自发送</span>
+        <span class="operator-params-name">project</span>
+        <span class="operator-params-type">function(value: T, ?index: number): ObservableInput</span>
+        <span class="operator-params-desc">map的函数，传入原始Source的Value,返回一个新的Observable</span>
+    </li>
+    <li>
+        <span class="operator-params-name">resultSelector</span>
+        <span class="operator-params-type">function(outerValue: T, innerValue: I, outerIndex: number, innerIndex: number): any</span>
+        <span class="operator-params-desc">(可选)一个函数，用于决定最终扁平化之后的值。传入的4个值分别为:source的值，project返回的Observable的值，以及2个对应的index</span>
     </li>
     <li>
         <span class="operator-params-name">concurrent</span>
         <span class="operator-params-type">number</span>
         <span class="operator-params-desc">(可选)merge可以同时订阅的source数量，默认是正无穷大。</span>
     </li>
-    <li>
-        <span class="operator-params-name">scheduler</span>
-        <span class="operator-params-type">Scheduler</span>
-        <span class="operator-params-desc">调度器</span>
-    </li>
-
-
 </ul>
 返回值:<h2 class="operator-ret"> Observable</h2>
 
 <hr>
 <h1>珠宝图:</h1>
 <div class="marble-box">
-    <img src="merge.png" alt="" class="operator-marble">
+    <img src="mergeMap.png" alt="" class="operator-marble">
 </div>
 <hr>
 <h1>功能说明:</h1>
 <ul class="desc">
-    <li>merge 订阅Source以及其他输入的所有值，然后发出。如果不设置concurrent,则感觉和同时订阅多个source效果一样</li>
+    <li>mergeMap 先对每个Source的value做map，然后对map的结果(Observable)做mergeAll</li>
 </ul>
 <hr>
 <h1>备注事项:</h1>
 <ul class="notice">
-    <li>complete 的发出：必须等到所有输入都complete</li>
-    <li>error 的发出：任何一个source发生error,merge都会error</li>
-    <li>merge也可以作为static方法使用</li>
+    <li>可以通过concurrent设置mergeMap的并发度</li>
 </ul>
 
 <div class="demo">
@@ -60,34 +56,38 @@
 
 <script>
     function demo1(){
-        console.log("merge:2个source,1个是页面点击事件流，一个是计时器")
-        var clicks = Rx.Observable.fromEvent(document, 'click');
-        var timer = Rx.Observable.interval(1000);
-        var clicksOrTimer = clicks.merge(timer);
-        clicksOrTimer.subscribe(x => console.log(x));
-    }
-    function demo2() {
+        console.log("mergeMap:每次点击产生一个计时器流，然后合并他们")
+        var source = Rx.Observable.fromEvent(document.body, 'click');
 
-        console.log("merge:2个计时器，都complete才会complete")
-        var source = Rx.Observable.interval(1500).take(3);
-        var source2 = Rx.Observable.interval(100).take(6);
-        var example = source.merge(source2);
+        var example = source
+            .mergeMap(
+                e => Rx.Observable.interval(500).take(3)
+            );
 
         example.subscribe({
             next: (value) => { console.log(value); },
             error: (err) => { console.log('Error: ' + err); },
             complete: () => { console.log('complete'); }
         });
-// 0
-// 0
-// 1
-// 2
-// 1
-// 3
-// 2
-// 4
-// 5
-// complete
+    }
+    function demo2() {
+
+        console.log("mergeMap:在demo1基础上，设置并发度=2，并且使用函数改变输出的值")
+        var source = Rx.Observable.fromEvent(document.body, 'click');
+
+        var example = source
+            .mergeMap(
+                e => Rx.Observable.interval(500).take(3),
+                (outerValue, innerValue, outerIndex, innerIndex) => {
+                    return `${outerValue.clientX},${outerValue.clientY}:${innerValue}`
+                },2
+            );
+
+        example.subscribe({
+            next: (value) => { console.log(value); },
+            error: (err) => { console.log('Error: ' + err); },
+            complete: () => { console.log('complete'); }
+        });
     }
 </script>
 

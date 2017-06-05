@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>operator:concatAll</title>
+    <title>operator:mergeAll</title>
 
     <link rel="stylesheet" href="../reset.css">
     <link rel="stylesheet" href="../share.css">
@@ -10,70 +10,79 @@
 </head>
 <body>
 
-<h1 class="operator-name">concatAll</h1>
+<h1 class="operator-name">mergeAll</h1>
 
-<!--<ul class="operator-params">-->
-    <!--参数列表：-->
-    <!--<li>-->
-        <!--<span class="operator-params-name">notifier</span>-->
-        <!--<span class="operator-params-type">Observable</span>-->
-        <!--<span class="operator-params-desc">控制结束的observable,它一旦发射值，或者complete,那么对source的订阅终止，返回complete</span>-->
-    <!--</li>-->
+<ul class="operator-params">
+    参数列表：
+    <li>
+        <span class="operator-params-name">concurrent</span>
+        <span class="operator-params-type">number</span>
+        <span class="operator-params-desc">(可选),设置mergeAll容纳并发Source的最大数，默认是无限</span>
+    </li>
 
 
-<!--</ul>-->
+</ul>
 返回值:<h2 class="operator-ret"> Observable</h2>
 
 <hr>
 <h1>珠宝图:</h1>
 <div class="marble-box">
-    <img src="concatAll.png" alt="" class="operator-marble">
+    <img src="mergeAll.png" alt="" class="operator-marble">
 </div>
 <hr>
 <h1>功能说明:</h1>
 <ul class="desc">
-    <li>concatAll 订阅Source发射出的每一个Observable,并且把内部Observable的值转发出来。他必须等待前一个内部Observable的complete之后才会订阅下一个</li>
+    <li>mergeAll 订阅Source发射出的每一个Observable,并且把内部Observable的值转发出来。</li>
 </ul>
 <hr>
 <h1>备注事项:</h1>
 <ul class="notice">
-    <li>必须等到前一个inner observable发生complete之后，concatAll才会订阅下一个source返回的Observable</li>
+    <li>mergeAll是并发的，所有被订阅的Observable都是同时工作的</li>
 </ul>
 
 <div class="demo">
     <span>点击不同按钮查看不同demo 代码效果</span>
     <button onclick="demo1();">demo1</button>
+    <button onclick="demo2();">demo2</button>
+    <button onclick="demo3();">demo3</button>
 </div>
 
 <script>
     function demo1(){
-        console.log("concatAll:3个inner observable通过计时器发射数据，先慢后快。")
-        var obs1 = Rx.Observable.interval(1000).take(5);
-        var obs2 = Rx.Observable.interval(500).take(4);
-        var obs3 = Rx.Observable.interval(100).take(3);
+        console.log("mergeAll:每一次点击，都生成一个新的Observable计时器序列")
+        var click = Rx.Observable.fromEvent(document.body, 'click');
+        var source = click.map(e => Rx.Observable.interval(1000));
 
-        var source = Rx.Observable.of(obs1, obs2, obs3);
-
-        var example = source.concatAll();
-
+        var example = source.mergeAll();
         example.subscribe({
             next: (value) => { console.log(value); },
             error: (err) => { console.log('Error: ' + err); },
             complete: () => { console.log('complete'); }
         });
-// 0
-// 1
-// 2
-// 3
-// 4
-// 0
-// 1
-// 2
-// 3
-// 0
-// 1
-// 2
-// complete
+    }
+    function demo2(){
+        console.log("mergeAll:间隔1s的主序列发射4个数据，每个数据map成500ms的子序列(10个元素).4个子序列都complete了，整个mergeAll才complete")
+        var t1 = Rx.Observable.interval(1000).take(4);
+        var source = t1.map(e => Rx.Observable.interval(500).take(10));
+
+        var example = source.mergeAll();
+        example.subscribe({
+            next: (value) => { console.log(value); },
+            error: (err) => { console.log('Error: ' + err); },
+            complete: () => { console.log('complete'); }
+        });
+    }
+    function demo3(){
+        console.log("mergeAll:同demo2,但是加上并发数2的限制，会发现mergeAll必须费2倍的时间才能完全做完(但不会漏数据)")
+        var t1 = Rx.Observable.interval(1000).take(4);
+        var source = t1.map(e => Rx.Observable.interval(500).take(10));
+
+        var example = source.mergeAll(2);
+        example.subscribe({
+            next: (value) => { console.log(value); },
+            error: (err) => { console.log('Error: ' + err); },
+            complete: () => { console.log('complete'); }
+        });
     }
 </script>
 

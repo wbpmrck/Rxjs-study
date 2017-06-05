@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>operator:groupBy</title>
+
+    <link rel="stylesheet" href="../reset.css">
+    <link rel="stylesheet" href="../share.css">
+    <script src="../Rx.min.js"></script>
+</head>
+<body>
+
+<h1 class="operator-name">groupBy</h1>
+
+<ul class="operator-params">
+    参数列表：
+    <li>
+        <span class="operator-params-name">keySelector</span>
+        <span class="operator-params-type">function(value: T): K</span>
+        <span class="operator-params-desc">一个函数，接收Source的value为入参，返回代表这个参数的key的值</span>
+    </li>
+    <li>
+        <span class="operator-params-name">elementSelector</span>
+        <span class="operator-params-type">function(value: T): R</span>
+        <span class="operator-params-desc">(可选)一个函数，接收Source的value为入参，返回实际要emit出去的value</span>
+    </li>
+    <li>
+        <span class="operator-params-name">durationSelector</span>
+        <span class="operator-params-type">function(grouped: GroupedObservable&lt;K, R&gt;): Observable&lt;any&gt;</span>
+        <span class="operator-params-desc">(可选)决定每个group存在多长时间，目前用法不太清楚。文档里也没写</span>
+    </li>
+
+
+</ul>
+返回值:<h2 class="operator-ret"> Observable &lt;GroupedObservable &lt;K,R&gt;&gt;</h2>
+
+<hr>
+<h1>珠宝图:</h1>
+<div class="marble-box">
+    <img src="groupBy.png" alt="" class="operator-marble">
+</div>
+<hr>
+<h1>功能说明:</h1>
+<ul class="desc">
+    <li>groupBy 订阅Source,并且根据keySelector返回的key,把原始value分配到一个个组里(GroupedObservable)</li>
+    <li>返回的是一个个GroupedObservable，使用者需要订阅这些GroupedObservable得到实际发出的value</li>
+</ul>
+<hr>
+<h1>备注事项:</h1>
+<ul class="notice">
+</ul>
+
+<div class="demo">
+    <span>点击不同按钮查看不同demo 代码效果</span>
+    <button onclick="demo1();">demo1</button>
+</div>
+
+<script>
+    function demo1(){
+        console.log(`groupBy 根据人名进行统计`);
+        var people = [
+            {name: 'Anna', score: 100, subject: 'English'},
+            {name: 'Anna', score: 90, subject: 'Math'},
+            {name: 'Anna', score: 96, subject: 'Chinese' },
+            {name: 'Jerry', score: 80, subject: 'English'},
+            {name: 'Jerry', score: 100, subject: 'Math'},
+            {name: 'Jerry', score: 90, subject: 'Chinese' },
+        ];
+        console.log(`list is :\r\n ${JSON.stringify(people)}`);
+        var source = Rx.Observable.from(people)
+            .zip(
+                Rx.Observable.interval(300),
+                (x, y) => x);
+
+        var example = source
+            .groupBy(person => person.name)
+            .map(group => group.reduce((acc, curr) => ({
+                name: curr.name,
+                score: curr.score + acc.score
+            })))
+            .mergeAll();
+
+        example.subscribe(console.log);
+// { name: "Anna", score: 286 }
+// { name: 'Jerry', score: 270 }
+    }
+</script>
+
+
+</body>
+</html>
