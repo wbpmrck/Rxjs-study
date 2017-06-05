@@ -57,7 +57,7 @@ study cases of Rxjs library
         - concatMapTo
         - exhaustMap
         - expand
-        - groupBy
+        - [groupBy](./study/operators/groupBy.html)
         - [map](./study/operators/map.html)
         - [mapTo](./study/operators/mapTo.html)
         - [mergeMap](./study/operators/mergeMap.html)
@@ -162,7 +162,7 @@ study cases of Rxjs library
         - count
         - max
         - min
-        - reduce
+        - [reduce](./study/demos/reduce.html)
 - 综合练习
     - [Drag DOM](./study/demos/dragDOM.html)
     - [DragDOM_extend](./study/demos/dragDOM_extend.html)
