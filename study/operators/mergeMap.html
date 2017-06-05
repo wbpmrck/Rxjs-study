@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>operator:merge</title>
+
+    <link rel="stylesheet" href="../reset.css">
+    <link rel="stylesheet" href="../share.css">
+    <script src="../Rx.min.js"></script>
+</head>
+<body>
+
+<h1 class="operator-name">merge</h1>
+
+<ul class="operator-params">
+    参数列表：
+    <li>
+        <span class="operator-params-name">other</span>
+        <span class="operator-params-type">...ObservableInput</span>
+        <span class="operator-params-desc">1个或者多个Observable,他的值会被订阅，和source的值一起，各自发送</span>
+    </li>
+    <li>
+        <span class="operator-params-name">concurrent</span>
+        <span class="operator-params-type">number</span>
+        <span class="operator-params-desc">(可选)merge可以同时订阅的source数量，默认是正无穷大。</span>
+    </li>
+    <li>
+        <span class="operator-params-name">scheduler</span>
+        <span class="operator-params-type">Scheduler</span>
+        <span class="operator-params-desc">调度器</span>
+    </li>
+
+
+</ul>
+返回值:<h2 class="operator-ret"> Observable</h2>
+
+<hr>
+<h1>珠宝图:</h1>
+<div class="marble-box">
+    <img src="merge.png" alt="" class="operator-marble">
+</div>
+<hr>
+<h1>功能说明:</h1>
+<ul class="desc">
+    <li>merge 订阅Source以及其他输入的所有值，然后发出。如果不设置concurrent,则感觉和同时订阅多个source效果一样</li>
+</ul>
+<hr>
+<h1>备注事项:</h1>
+<ul class="notice">
+    <li>complete 的发出：必须等到所有输入都complete</li>
+    <li>error 的发出：任何一个source发生error,merge都会error</li>
+    <li>merge也可以作为static方法使用</li>
+</ul>
+
+<div class="demo">
+    <span>点击不同按钮查看不同demo 代码效果</span>
+    <button onclick="demo1();">demo1</button>
+    <button onclick="demo2();">demo2</button>
+</div>
+
+<script>
+    function demo1(){
+        console.log("merge:2个source,1个是页面点击事件流，一个是计时器")
+        var clicks = Rx.Observable.fromEvent(document, 'click');
+        var timer = Rx.Observable.interval(1000);
+        var clicksOrTimer = clicks.merge(timer);
+        clicksOrTimer.subscribe(x => console.log(x));
+    }
+    function demo2() {
+
+        console.log("merge:2个计时器，都complete才会complete")
+        var source = Rx.Observable.interval(1500).take(3);
+        var source2 = Rx.Observable.interval(100).take(6);
+        var example = source.merge(source2);
+
+        example.subscribe({
+            next: (value) => { console.log(value); },
+            error: (err) => { console.log('Error: ' + err); },
+            complete: () => { console.log('complete'); }
+        });
+// 0
+// 0
+// 1
+// 2
+// 1
+// 3
+// 2
+// 4
+// 5
+// complete
+    }
+</script>
+
+
+</body>
+</html>

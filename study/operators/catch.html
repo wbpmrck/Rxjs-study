@@ -44,6 +44,7 @@
     <span>点击不同按钮查看不同demo 代码效果</span>
     <button onclick="demo1();">demo1</button>
     <button onclick="demo2();">demo2</button>
+    <button onclick="demo3();">demo3</button>
 </div>
 
 <script>
@@ -78,6 +79,26 @@
                 complete: () => { console.log('complete'); }
             });
         // 1, 2, 3, 1, 2, 3, ...
+    }
+
+    function demo3() {
+        console.log("catch :综合使用,模拟重试的例子。");
+        var source = Rx.Observable.from(['a','b','c','d',2])
+            .zip(Rx.Observable.interval(500), (x,y) => x)
+            .map(x => x.toUpperCase());
+        // 通常 source 會是建立即時同步的連線，像是 web socket
+
+        var example = source.catch(
+            (error, obs) => Rx.Observable.empty()
+                .startWith('連線發生錯誤： 5秒後重連')
+                .concat(obs.delay(5000))
+        );
+
+        example.subscribe({
+            next: (value) => { console.log('value: ' + value); },
+            error: (err) => { console.log('Error: ' + err); },
+            complete: () => { console.log('complete'); }
+        });
     }
 </script>
 

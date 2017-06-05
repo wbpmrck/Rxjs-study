@@ -41,7 +41,7 @@ study cases of Rxjs library
         - [interval](./study/operators/interval.html)
         - [never](./study/operators/never.html)
         - [of](./study/operators/of.html)
-        - repeat
+        - [repeat](./study/operators/repeat.html)
         - repeatWhen
         - range
         - [throw](./study/operators/throw.html)
@@ -53,14 +53,14 @@ study cases of Rxjs library
         - [bufferTime](./study/operators/bufferTime.html)
         - bufferToggle
         - bufferWhen
-        - concatMap
+        - [concatMap](./study/operators/concatMap.html)
         - concatMapTo
         - exhaustMap
         - expand
         - groupBy
         - [map](./study/operators/map.html)
         - [mapTo](./study/operators/mapTo.html)
-        - mergeMap
+        - [mergeMap](./study/operators/mergeMap.html)
         - mergeMapTo
         - mergeScan
         - pairwise
@@ -69,10 +69,10 @@ study cases of Rxjs library
         - [scan](./study/operators/scan.html)
         - [switchMap](./study/operators/switchMap.html)
         - switchMapTo
-        - window
+        - [window](./study/operators/window.html)
         - windowCount
         - windowTime
-        - windowToggle
+        - [windowToggle](./study/operators/windowToggle.html)
         - windowWhen
 
     - Filtering Operators
@@ -110,7 +110,7 @@ study cases of Rxjs library
         - exhaust
         - forkJoin
         - [merge](./study/operators/merge.html)
-        - mergeAll
+        - [mergeAll](./study/operators/mergeAll.html)
         - race
         - [startWith](./study/operators/startWith.html)
         - [switch](./study/operators/switch.html)
@@ -167,3 +167,4 @@ study cases of Rxjs library
     - [Drag DOM](./study/demos/dragDOM.html)
     - [DragDOM_extend](./study/demos/dragDOM_extend.html)
     - [follow_img](./study/demos/follow_img.html)
+

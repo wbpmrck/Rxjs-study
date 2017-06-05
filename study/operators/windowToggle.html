@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>operator:window</title>
+
+    <link rel="stylesheet" href="../reset.css">
+    <link rel="stylesheet" href="../share.css">
+    <script src="../Rx.min.js"></script>
+</head>
+<body>
+
+<h1 class="operator-name">window</h1>
+
+<ul class="operator-params">
+    参数列表：
+    <li>
+        <span class="operator-params-name">windowBoundaries</span>
+        <span class="operator-params-type">Observable&lt;any&gt;</span>
+        <span class="operator-params-desc">一个Observable，用于告诉operator应该把当前source发出的值放入当前window,作为一个Observable发出去。并开启一个新的window</span>
+    </li>
+
+
+</ul>
+返回值:<h2 class="operator-ret"> Observable &lt;Observable &lt;T&gt;&gt;</h2>
+
+<hr>
+<h1>珠宝图:</h1>
+<div class="marble-box">
+    <img src="window.png" alt="" class="operator-marble">
+</div>
+<hr>
+<h1>功能说明:</h1>
+<ul class="desc">
+    <li>window 订阅Source,并且内部维护，并向外部发送一个window对象(是一个Observable),当 windowBoundaries 没有值发出的时候，source的value全部从当前window发出</li>
+    <li>一旦 windowBoundaries 有任何的值发出，当前window会被complete,新的window开启并发出。</li>
+</ul>
+<hr>
+<h1>备注事项:</h1>
+<ul class="notice">
+    <li>window很像buffer,但是和buffer返回一个数组不同，window返回若干个Observable</li>
+    <li>因为window的每个窗口期肯定不会重叠，所以虽然window返回若干个Observable,但是使用concatAll还是switch来扁平化window,效果都是等价的</li>
+</ul>
+
+<div class="demo">
+    <span>点击不同按钮查看不同demo 代码效果</span>
+    <button onclick="demo1();">demo1</button>
+    <button onclick="demo2();">demo2</button>
+</div>
+
+<script>
+    function demo1(){
+        console.log(`window 把点击事件按秒切分成一个个窗口，然后利用count计算数量`);
+        var click = Rx.Observable.fromEvent(document, 'click');
+        var source = Rx.Observable.interval(1000);
+        var example = click.window(source)
+
+        example
+            .map(innerObservable => innerObservable.count())
+            .concatAll()
+            .subscribe(console.log);
+    }
+</script>
+
+
+</body>
+</html>

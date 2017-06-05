@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>operator:concatMap</title>
+
+    <link rel="stylesheet" href="../reset.css">
+    <link rel="stylesheet" href="../share.css">
+    <script src="../Rx.min.js"></script>
+</head>
+<body>
+
+<h1 class="operator-name">concatMap</h1>
+
+<ul class="operator-params">
+    参数列表：
+    <li>
+        <span class="operator-params-name">project</span>
+        <span class="operator-params-type">function(value: T, ?index: number): ObservableInput</span>
+        <span class="operator-params-desc">map的函数，传入原始Source的Value,返回一个新的Observable</span>
+    </li>
+    <li>
+        <span class="operator-params-name">resultSelector</span>
+        <span class="operator-params-type">function(outerValue: T, innerValue: I, outerIndex: number, innerIndex: number): any</span>
+        <span class="operator-params-desc">(可选)一个函数，用于决定最终扁平化之后的值。传入的4个值分别为:source的值，project返回的Observable的值，以及2个对应的index</span>
+    </li>
+</ul>
+返回值:<h2 class="operator-ret"> Observable</h2>
+
+<hr>
+<h1>珠宝图:</h1>
+<div class="marble-box">
+    <img src="concatMap.png" alt="" class="operator-marble">
+</div>
+<hr>
+<h1>功能说明:</h1>
+<ul class="desc">
+    <li>concatMap 先对value做map,然后对所有map之后的observable做concat扁平化</li>
+</ul>
+<hr>
+<h1>备注事项:</h1>
+<ul class="notice">
+    <li>concatMap 其实等价于 并发度=1的mergeMap</li>
+</ul>
+
+<div class="demo">
+    <span>点击不同按钮查看不同demo 代码效果</span>
+    <button onclick="demo1();">demo1</button>
+    <button onclick="demo2();">demo2</button>
+</div>
+
+<script>
+    function demo1(){
+        console.log("concatMap:每次点击都生成一个新的间隔1s的数字序列(3个数),concatAll会挨个处理他们。")
+        var source = Rx.Observable.fromEvent(document.body, 'click');
+
+        var example = source
+            .concatMap(e => Rx.Observable.interval(1000).take(3));
+
+        example.subscribe({
+            next: (value) => { console.log(value); },
+            error: (err) => { console.log('Error: ' + err); },
+            complete: () => { console.log('complete'); }
+        });
+    }
+    function demo2(){
+        console.log("concatMap:demo1的基础上，使用第二个参数做一些值的变换(点击坐标+timer序列)。");
+
+        var source = Rx.Observable.fromEvent(document.body, 'click');
+
+        var example = source
+            .concatMap(e => Rx.Observable.interval(1000).take(3),
+                (outerValue,innerValue,outerIndex,innerIndex)=>{return `${outerValue.clientX},${outerValue.clientY}:${innerValue}`});
+
+        example.subscribe({
+            next: (value) => { console.log(value); },
+            error: (err) => { console.log('Error: ' + err); },
+            complete: () => { console.log('complete'); }
+        });
+    }
+</script>
+
+
+</body>
+</html>
