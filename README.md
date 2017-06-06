@@ -167,4 +167,5 @@ study cases of Rxjs library
     - [Drag DOM](./study/demos/dragDOM.html)
     - [DragDOM_extend](./study/demos/dragDOM_extend.html)
     - [follow_img](./study/demos/follow_img.html)
+    - [auto-complete](./study/demos/auto-complete.html)
 
