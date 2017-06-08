@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>operator:groupBy</title>
+    <title>operator:reduce</title>
 
     <link rel="stylesheet" href="../reset.css">
     <link rel="stylesheet" href="../share.css">
@@ -10,40 +10,35 @@
 </head>
 <body>
 
-<h1 class="operator-name">groupBy</h1>
+<h1 class="operator-name">reduce</h1>
 
 <ul class="operator-params">
     参数列表：
     <li>
-        <span class="operator-params-name">keySelector</span>
-        <span class="operator-params-type">function(value: T): K</span>
-        <span class="operator-params-desc">一个函数，接收Source的value为入参，返回代表这个参数的key的值</span>
+        <span class="operator-params-name">accumulator</span>
+        <span class="operator-params-type">function(acc: R, value: T, index: number): R</span>
+        <span class="operator-params-desc">一个函数，会被用来对每一个value进行调用，所返回的值会作为下一次调用的第一个参数</span>
     </li>
     <li>
-        <span class="operator-params-name">elementSelector</span>
-        <span class="operator-params-type">function(value: T): R</span>
-        <span class="operator-params-desc">(可选)一个函数，接收Source的value为入参，返回实际要emit出去的value</span>
-    </li>
-    <li>
-        <span class="operator-params-name">durationSelector</span>
-        <span class="operator-params-type">function(grouped: GroupedObservable&lt;K, R&gt;): Observable&lt;any&gt;</span>
-        <span class="operator-params-desc">(可选)决定每个group存在多长时间，目前用法不太清楚。文档里也没写</span>
+        <span class="operator-params-name">seed</span>
+        <span class="operator-params-type">R</span>
+        <span class="operator-params-desc">(可选)初始化的accumulator的值</span>
     </li>
 
 
 </ul>
-返回值:<h2 class="operator-ret"> Observable &lt;GroupedObservable &lt;K,R&gt;&gt;</h2>
+返回值:<h2 class="operator-ret"> Observable &lt;R&gt;</h2>
 
 <hr>
 <h1>珠宝图:</h1>
 <div class="marble-box">
-    <img src="groupBy.png" alt="" class="operator-marble">
+    <img src="reduce.png" alt="" class="operator-marble">
 </div>
 <hr>
 <h1>功能说明:</h1>
 <ul class="desc">
-    <li>groupBy 订阅Source,并且根据keySelector返回的key,把原始value分配到一个个组里(GroupedObservable)</li>
-    <li>返回的是一个个GroupedObservable，使用者需要订阅这些GroupedObservable得到实际发出的value</li>
+    <li>reduce 订阅Source,对每一个Source进行accumulator调用</li>
+    <li>reduce只会在Source结束(complete)的时候返回一个值</li>
 </ul>
 <hr>
 <h1>备注事项:</h1>
@@ -57,32 +52,13 @@
 
 <script>
     function demo1(){
-        console.log(`groupBy 根据人名进行统计`);
-        var people = [
-            {name: 'Anna', score: 100, subject: 'English'},
-            {name: 'Anna', score: 90, subject: 'Math'},
-            {name: 'Anna', score: 96, subject: 'Chinese' },
-            {name: 'Jerry', score: 80, subject: 'English'},
-            {name: 'Jerry', score: 100, subject: 'Math'},
-            {name: 'Jerry', score: 90, subject: 'Chinese' },
-        ];
-        console.log(`list is :\r\n ${JSON.stringify(people)}`);
-        var source = Rx.Observable.from(people)
-            .zip(
-                Rx.Observable.interval(300),
-                (x, y) => x);
-
-        var example = source
-            .groupBy(person => person.name)
-            .map(group => group.reduce((acc, curr) => ({
-                name: curr.name,
-                score: curr.score + acc.score
-            })))
-            .mergeAll();
-
-        example.subscribe(console.log);
-// { name: "Anna", score: 286 }
-// { name: 'Jerry', score: 270 }
+        console.log(`reduce 统计接下来5秒的点击数量`);
+        var clicksInFiveSeconds = Rx.Observable.fromEvent(document, 'click')
+            .takeUntil(Rx.Observable.interval(5000));
+        var ones = clicksInFiveSeconds.mapTo(1);
+        var seed = 0;
+        var count = ones.reduce((acc, one) => acc + one, seed);
+        count.subscribe(x => console.log(x));
     }
 </script>
 
