@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>operator:window</title>
+    <title>operator:windowToggle</title>
 
     <link rel="stylesheet" href="../reset.css">
     <link rel="stylesheet" href="../share.css">
@@ -10,14 +10,19 @@
 </head>
 <body>
 
-<h1 class="operator-name">window</h1>
+<h1 class="operator-name">windowToggle</h1>
 
 <ul class="operator-params">
     参数列表：
     <li>
-        <span class="operator-params-name">windowBoundaries</span>
+        <span class="operator-params-name">openings</span>
         <span class="operator-params-type">Observable&lt;any&gt;</span>
-        <span class="operator-params-desc">一个Observable，用于告诉operator应该把当前source发出的值放入当前window,作为一个Observable发出去。并开启一个新的window</span>
+        <span class="operator-params-desc">一个Observable，用于告诉operator应该开启一个新window</span>
+    </li>
+    <li>
+        <span class="operator-params-name">closingSelector</span>
+        <span class="operator-params-type">function(value: O): Observable</span>
+        <span class="operator-params-desc">1个函数，接收 openings 发出的value,返回一个observable。返回的Observable每发出一个value,就会告诉operator当前window结束</span>
     </li>
 
 
@@ -27,38 +32,37 @@
 <hr>
 <h1>珠宝图:</h1>
 <div class="marble-box">
-    <img src="window.png" alt="" class="operator-marble">
+    <img src="windowToggle.png" alt="" class="operator-marble">
 </div>
 <hr>
 <h1>功能说明:</h1>
 <ul class="desc">
-    <li>window 订阅Source,并且内部维护，并向外部发送一个window对象(是一个Observable),当 windowBoundaries 没有值发出的时候，source的value全部从当前window发出</li>
-    <li>一旦 windowBoundaries 有任何的值发出，当前window会被complete,新的window开启并发出。</li>
+    <li>windowToggle 订阅Source,当 openings发出一个值时，开启一个window,在此之后的Source的value会从这个window发出</li>
+    <li>一旦 closingSelector 有任何的值发出，当前window会被complete。</li>
 </ul>
 <hr>
 <h1>备注事项:</h1>
 <ul class="notice">
-    <li>window很像buffer,但是和buffer返回一个数组不同，window返回若干个Observable</li>
-    <li>因为window的每个窗口期肯定不会重叠，所以虽然window返回若干个Observable,但是使用concatAll还是switch来扁平化window,效果都是等价的</li>
+    <li>windowToggle的好处是自己可以灵活控制窗口的开和关闭</li>
 </ul>
 
 <div class="demo">
     <span>点击不同按钮查看不同demo 代码效果</span>
     <button onclick="demo1();">demo1</button>
-    <button onclick="demo2();">demo2</button>
 </div>
 
 <script>
     function demo1(){
-        console.log(`window 把点击事件按秒切分成一个个窗口，然后利用count计算数量`);
-        var click = Rx.Observable.fromEvent(document, 'click');
+        console.log(`windowToggle 利用鼠标按下事件开启窗口，鼠标抬起则窗口关闭`);
         var source = Rx.Observable.interval(1000);
-        var example = click.window(source)
+        var mouseDown = Rx.Observable.fromEvent(document, 'mousedown');
+        var mouseUp = Rx.Observable.fromEvent(document, 'mouseup');
 
-        example
-            .map(innerObservable => innerObservable.count())
-            .concatAll()
-            .subscribe(console.log);
+        var example = source
+            .windowToggle(mouseDown, () => mouseUp)
+            .switch();
+
+        example.subscribe(console.log);
     }
 </script>
 
