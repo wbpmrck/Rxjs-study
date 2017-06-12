@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>operator:window</title>
+    <title>operator:groupBy</title>
 
     <link rel="stylesheet" href="../reset.css">
     <link rel="stylesheet" href="../share.css">
@@ -10,55 +10,79 @@
 </head>
 <body>
 
-<h1 class="operator-name">window</h1>
+<h1 class="operator-name">groupBy</h1>
 
 <ul class="operator-params">
     参数列表：
     <li>
-        <span class="operator-params-name">windowBoundaries</span>
-        <span class="operator-params-type">Observable&lt;any&gt;</span>
-        <span class="operator-params-desc">一个Observable，用于告诉operator应该把当前source发出的值放入当前window,作为一个Observable发出去。并开启一个新的window</span>
+        <span class="operator-params-name">keySelector</span>
+        <span class="operator-params-type">function(value: T): K</span>
+        <span class="operator-params-desc">一个函数，接收Source的value为入参，返回代表这个参数的key的值</span>
+    </li>
+    <li>
+        <span class="operator-params-name">elementSelector</span>
+        <span class="operator-params-type">function(value: T): R</span>
+        <span class="operator-params-desc">(可选)一个函数，接收Source的value为入参，返回实际要emit出去的value</span>
+    </li>
+    <li>
+        <span class="operator-params-name">durationSelector</span>
+        <span class="operator-params-type">function(grouped: GroupedObservable&lt;K, R&gt;): Observable&lt;any&gt;</span>
+        <span class="operator-params-desc">(可选)决定每个group存在多长时间，目前用法不太清楚。文档里也没写</span>
     </li>
 
 
 </ul>
-返回值:<h2 class="operator-ret"> Observable &lt;Observable &lt;T&gt;&gt;</h2>
+返回值:<h2 class="operator-ret"> Observable &lt;GroupedObservable &lt;K,R&gt;&gt;</h2>
 
 <hr>
 <h1>珠宝图:</h1>
 <div class="marble-box">
-    <img src="window.png" alt="" class="operator-marble">
+    <img src="groupBy.png" alt="" class="operator-marble">
 </div>
 <hr>
 <h1>功能说明:</h1>
 <ul class="desc">
-    <li>window 订阅Source,并且内部维护，并向外部发送一个window对象(是一个Observable),当 windowBoundaries 没有值发出的时候，source的value全部从当前window发出</li>
-    <li>一旦 windowBoundaries 有任何的值发出，当前window会被complete,新的window开启并发出。</li>
+    <li>groupBy 订阅Source,并且根据keySelector返回的key,把原始value分配到一个个组里(GroupedObservable)</li>
+    <li>返回的是一个个GroupedObservable，使用者需要订阅这些GroupedObservable得到实际发出的value</li>
 </ul>
 <hr>
 <h1>备注事项:</h1>
 <ul class="notice">
-    <li>window很像buffer,但是和buffer返回一个数组不同，window返回若干个Observable</li>
-    <li>因为window的每个窗口期肯定不会重叠，所以虽然window返回若干个Observable,但是使用concatAll还是switch来扁平化window,效果都是等价的</li>
 </ul>
 
 <div class="demo">
     <span>点击不同按钮查看不同demo 代码效果</span>
     <button onclick="demo1();">demo1</button>
-    <button onclick="demo2();">demo2</button>
 </div>
 
 <script>
     function demo1(){
-        console.log(`window 把点击事件按秒切分成一个个窗口，然后利用count计算数量`);
-        var click = Rx.Observable.fromEvent(document, 'click');
-        var source = Rx.Observable.interval(1000);
-        var example = click.window(source)
+        console.log(`groupBy 根据人名进行统计`);
+        var people = [
+            {name: 'Anna', score: 100, subject: 'English'},
+            {name: 'Anna', score: 90, subject: 'Math'},
+            {name: 'Anna', score: 96, subject: 'Chinese' },
+            {name: 'Jerry', score: 80, subject: 'English'},
+            {name: 'Jerry', score: 100, subject: 'Math'},
+            {name: 'Jerry', score: 90, subject: 'Chinese' },
+        ];
+        console.log(`list is :\r\n ${JSON.stringify(people)}`);
+        var source = Rx.Observable.from(people)
+            .zip(
+                Rx.Observable.interval(300),
+                (x, y) => x);
 
-        example
-            .map(innerObservable => innerObservable.count())
-            .concatAll()
-            .subscribe(console.log);
+        var example = source
+            .groupBy(person => person.name)
+            .map(group => group.reduce((acc, curr) => ({
+                name: curr.name,
+                score: curr.score + acc.score
+            })))
+            .mergeAll();
+
+        example.subscribe(console.log);
+// { name: "Anna", score: 286 }
+// { name: 'Jerry', score: 270 }
     }
 </script>
 
